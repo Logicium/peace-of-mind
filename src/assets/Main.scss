@@ -1,0 +1,12 @@
+@import './base.css';
+@import "Colors.scss";
+
+#app {
+  min-height: 100vh;
+  font-weight: normal;
+  background-color: $background;
+  color: $primary;
+  //font-family: "Cormorant Garamond", serif;
+  font-family: "Libre Baskerville", serif;
+  //font-family: "Playfair Display", serif;
+}
