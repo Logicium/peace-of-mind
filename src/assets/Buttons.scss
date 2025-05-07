@@ -1,0 +1,38 @@
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: $primary;
+  color: $background;
+  box-sizing: border-box;
+  padding: 1vw;
+  cursor: pointer;
+}
+
+.underline{
+  color: $primary;
+  background-color: transparent;
+  border-bottom: 4px solid $primary;
+  width: fit-content;
+}
+
+.ghost{
+  background-color: transparent;
+  border: 4px solid $primary;
+  color: $primary;
+}
+
+.oval{
+  height: 45px;
+  border-radius: 45px;
+  width: fit-content;
+}
+
+.round{
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  margin-top: 1vw;
+}

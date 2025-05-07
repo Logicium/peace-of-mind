@@ -1,12 +1,54 @@
-@import './base.css';
 @import "Colors.scss";
+@import "Buttons.scss";
+@import "Text";
 
 #app {
-  min-height: 100vh;
+  height: 100vh;
   font-weight: normal;
   background-color: $background;
   color: $primary;
+  font-size: $fontNormal;
   //font-family: "Cormorant Garamond", serif;
-  font-family: "Libre Baskerville", serif;
+  font-family: "Outfit", sans-serif;
+  //font-family: "Libre Baskerville", serif;
   //font-family: "Playfair Display", serif;
+  //font-family: "Comfortaa", sans-serif;
+}
+
+body{
+  margin: 0;
+}
+
+.banner{
+  font-size: $fontBig;
+  font-family: "Newsreader", serif;
+}
+
+.title {
+  font-family: "Pattaya", sans-serif;
+  font-size: calc(18px + 2vw);
+  color: $primary;
+}
+
+.subtitle {
+  font-family: "Comfortaa", sans-serif;
+  font-weight: 700;
+  color: $primary;
+}
+
+.image{
+  background-size: cover;
+  background-position: center;
+}
+
+.bold{
+  font-weight: 500;
+}
+
+.logo {
+  background-image: url('/images/logo.png');
+  background-size: cover;
+  background-position: 100% 100%;
+  height: 120px;
+  width: 120px;
 }

@@ -1,9 +1,10 @@
 const data = {
   about:{
-    tagline:"You deserve Peace of Mind throughout your pregnancy, birth, & beyond!",
+    tagline:"You deserve Peace of Mind throughout your pregnancy, birth, & beyond.",
     intro:"Peace of Mind Birth Education LLC was born out of a strong desire to provide high-quality, evidence-based childbirth education to all women and birthing people. Guided by the principles of reproductive and birth justice, my mission is to support families through childbirth education rooted in self-advocacy, equipping them with the knowledge and confidence to navigate pregnancy, labor, and birth.",
     introShort:"Grounded in reproductive and birth justice, Peace of Mind Birth Education LLC's mission is to empower families with the knowledge and self-advocacy skills needed to navigate pregnancy, labor, and birth through high-quality, evidence-based childbirth education.",
     subtitle:"Childbirth Education | Birth Doula Support | Car Seat Safety",
+    bioShort:"I offer high-quality, evidence-based childbirth education, birth doula support, and car seat safety services rooted in reproductive and birth justice. My mission is to empower families with the knowledge, confidence, and support they deserve—throughout pregnancy, birth, and beyond.",
   },
   services:[
     {

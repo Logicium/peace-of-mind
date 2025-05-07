@@ -41,20 +41,19 @@ import ValueSection from "@/views/ValueSection.vue";
           <div class="label">Estimated Due Date:</div>
           <input type="date" placeholder="Estimated Due Date">
           <div class="btn oval">Contact</div>
-
         </div>
 
       </div>
 
-      <ValueSection/>
 
       <div class="section">
         <div class="title2 margin">Services</div>
         <div class="serviceGrid">
-          <ServiceItem v-for="service in data.services"
+          <ServiceItem v-for="(service, index) in data.services"
                        :name="service.name"
                        :desc="service.desc"
                        :image="service.image"
+                       :key="index"
           />
         </div>
       </div>
@@ -117,7 +116,7 @@ import ValueSection from "@/views/ValueSection.vue";
 .profileImage{
   border-radius: 50%;
   aspect-ratio: 1/1;
-  background-image: url("/public/images/kisori.jpg");
+  background-image: url("/images/kisori/kisori.jpg");
   background-size: cover;
   background-position: 100% 100%;
 }
@@ -135,45 +134,6 @@ import ValueSection from "@/views/ValueSection.vue";
   font-size: calc(12px + 1vw);
 }
 
-.btn {
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background-color: $primary;
-  color: $background;
-  box-sizing: border-box;
-  padding: 1vw;
-  margin-top: 1vw;
-  cursor: pointer;
-}
-
-.underline{
-  color: $primary;
-  background-color: transparent;
-  border-bottom: 4px solid $primary;
-  width: fit-content;
-}
-
-.ghost{
-  background-color: transparent;
-  border: 4px solid $primary;
-  color: $primary;
-}
-
-.oval{
-  height: 45px;
-  border-radius: 45px;
-  width: fit-content;
-}
-
-.round{
-  height: 150px;
-  width: 150px;
-  border-radius: 50%;
-  margin-top: 1vw;
-}
 
 .headerInfo {
   display: flex;
