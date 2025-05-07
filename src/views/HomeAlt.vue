@@ -43,7 +43,7 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
       </div>
     </div>
     <div class="panelFull offers">
-      <div class="reviews-title banner">My Services</div>
+      <div class="reviews-title">My Services</div>
       <div class="offersWrap">
         <ServiceItem v-for="(service, index) in data.services"
                      :name="service.name"
@@ -250,9 +250,10 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
 }
 
 .reviews-container {
-  margin-top: 2rem;
+  margin-top: $paddingLg;
   width: 100%;
   overflow: hidden;
+  margin-bottom: $paddingLg;
 }
 
 .reviews-title {
