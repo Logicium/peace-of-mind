@@ -6,6 +6,11 @@ import FlowerArt2 from "@/assets/line-art/FlowerArt2.vue";
 import FlowerArt3 from "@/assets/line-art/FlowerArt3.vue";
 import ServiceItem from "@/components/ServiceItem.vue";
 import ReviewCard from "@/components/cards/ReviewCard.vue";
+import StemArt1 from "@/assets/line-art/StemArt1.vue";
+import StemArt2 from "@/assets/line-art/StemArt2.vue";
+import StemArt3 from "@/assets/line-art/StemArt3.vue";
+import CarnationArt from "@/assets/line-art/CarnationArt.vue";
+import LilyArt from "@/assets/line-art/LilyArt.vue";
 </script>
 
 <template>
@@ -18,7 +23,7 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
         <div class="btn oval">LEARN MORE</div>
       </div>
       <div class="flowerBg"><FlowerArt3/></div>
-      <div class="flowerSm"><FlowerArt2/></div>
+      <div class="flowerSm"><CarnationArt/></div>
       <div class="imageArea">
 
       </div>
@@ -37,7 +42,7 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
       </div>
       <div class="image2">
 
-      </div>
+      </div><div class="flower4"><LilyArt/></div>
       <div class="bgCircle2">
 
       </div>
@@ -137,6 +142,17 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
   left: 10%;
   transform: rotate(170deg);
   z-index: 1;
+}
+
+.flower4{
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  bottom: 15%;
+  right: 25%;
+  z-index: 1;
+  transform: rotate(90deg);
+  color: $primary;
 }
 
 .list{
