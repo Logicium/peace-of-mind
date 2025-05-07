@@ -43,7 +43,7 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
       </div>
     </div>
     <div class="panelFull offers">
-      <h3 class="reviews-title">My Services</h3>
+      <div class="reviews-title banner">My Services</div>
       <div class="offersWrap">
         <ServiceItem v-for="(service, index) in data.services"
                      :name="service.name"
@@ -90,7 +90,6 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
 }
 
 .banner{
-  padding-right: $paddingMd;
   width: 80%;
 }
 
@@ -179,7 +178,7 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
   right:0;
-  background-color: transparent;
+  background-color: $bg2;
   transform: translateX(25%);
 }
 
@@ -258,14 +257,16 @@ import ReviewCard from "@/components/cards/ReviewCard.vue";
 
 .reviews-title {
   margin-bottom: 1.5rem;
-  font-size: $fontMed;
+  font-weight: 500;
+  font-size: $fontBig;
 }
 
 .reviews {
   display: flex;
   border-radius: 20px;
   overflow-x: scroll;
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
 }

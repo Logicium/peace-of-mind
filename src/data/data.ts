@@ -72,6 +72,24 @@ const data = {
       name: "David Thompson",
       rating: 5
     }
+  ],
+  instagramPosts: [
+    {
+      image: "/images/insta/IMG_0283.heic",
+      alt: "Instagram post 1"
+    },
+    {
+      image: "/images/insta/IMG_0368.heic",
+      alt: "Instagram post 2"
+    },
+    {
+      image: "/images/insta/IMG_0379.heic",
+      alt: "Instagram post 3"
+    },
+    {
+      image: "/images/insta/IMG_0473.heic",
+      alt: "Instagram post 4"
+    }
   ]
 }
 

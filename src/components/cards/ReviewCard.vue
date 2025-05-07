@@ -23,7 +23,7 @@ defineProps<{
 @import "../../assets/Text";
 
 .card {
-  background-color: $secondary;
+  background-color: $bg2;
   border-radius: 20px;
   padding: 1.5rem;
   min-width: 300px;
