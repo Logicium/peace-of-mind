@@ -5,6 +5,7 @@ import FlowerArt1 from "@/assets/line-art/FlowerArt1.vue";
 import FlowerArt2 from "@/assets/line-art/FlowerArt2.vue";
 import FlowerArt3 from "@/assets/line-art/FlowerArt3.vue";
 import ServiceItem from "@/components/ServiceItem.vue";
+import ReviewCard from "@/components/cards/ReviewCard.vue";
 </script>
 
 <template>
@@ -42,6 +43,7 @@ import ServiceItem from "@/components/ServiceItem.vue";
       </div>
     </div>
     <div class="panelFull offers">
+      <h3 class="reviews-title">My Services</h3>
       <div class="offersWrap">
         <ServiceItem v-for="(service, index) in data.services"
                      :name="service.name"
@@ -50,7 +52,18 @@ import ServiceItem from "@/components/ServiceItem.vue";
                      :key="index"
         />
       </div>
-      <div class="reviews"></div>
+      <div class="reviews-container">
+        <h3 class="reviews-title">What Our Clients Say</h3>
+        <div class="reviews">
+          <ReviewCard
+            v-for="(review, index) in data.reviews"
+            :key="index"
+            :text="review.text"
+            :name="review.name"
+            :rating="review.rating"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -61,7 +74,6 @@ import ServiceItem from "@/components/ServiceItem.vue";
 @import "../assets/Colors";
 
 .panel,.panelFull{
-  max-width:1200px;
   position: relative;
   display: grid;
   height: calc(100vh - 200px);
@@ -71,8 +83,10 @@ import ServiceItem from "@/components/ServiceItem.vue";
 }
 
 .panelFull{
-  height: calc(100vh - 200px);
+  min-height: calc(100vh - 100px);
+  height: auto;
   padding-top: 0;
+  padding-bottom: $paddingMd;
 }
 
 .banner{
@@ -138,7 +152,7 @@ import ServiceItem from "@/components/ServiceItem.vue";
 
 .offers{
   background-color: $background;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr auto;
   grid-template-columns: 1fr;
 }
 
@@ -234,5 +248,29 @@ import ServiceItem from "@/components/ServiceItem.vue";
   text-align: right;
   position: relative;
   z-index: 1;
+}
+
+.reviews-container {
+  margin-top: 2rem;
+  width: 100%;
+  overflow: hidden;
+}
+
+.reviews-title {
+  margin-bottom: 1.5rem;
+  font-size: $fontMed;
+}
+
+.reviews {
+  display: flex;
+  border-radius: 20px;
+  overflow-x: scroll;
+  padding-bottom: 1rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.reviews::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 </style>

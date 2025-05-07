@@ -45,6 +45,33 @@ const data = {
         "* Car seat checks are available in most communities to ensure proper installation.",
     }
 
+  ],
+  reviews: [
+    {
+      text: "Kisori's childbirth education class was transformative. I felt empowered and prepared for my birth experience.",
+      name: "Sarah Johnson",
+      rating: 5
+    },
+    {
+      text: "As a first-time parent, I was nervous about car seat installation. The guidance I received was clear, thorough, and reassuring.",
+      name: "Michael Chen",
+      rating: 5
+    },
+    {
+      text: "Having Kisori as my doula made all the difference. Her calm presence and knowledge helped me navigate a challenging labor.",
+      name: "Aisha Williams",
+      rating: 5
+    },
+    {
+      text: "The personalized education I received helped me make informed decisions during my pregnancy and birth.",
+      name: "Jessica Rodriguez",
+      rating: 4
+    },
+    {
+      text: "I can't imagine going through my birth journey without the support and knowledge I gained from Peace of Mind.",
+      name: "David Thompson",
+      rating: 5
+    }
   ]
 }
 
