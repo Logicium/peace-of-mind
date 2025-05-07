@@ -11,6 +11,8 @@ import StemArt2 from "@/assets/line-art/StemArt2.vue";
 import StemArt3 from "@/assets/line-art/StemArt3.vue";
 import CarnationArt from "@/assets/line-art/CarnationArt.vue";
 import LilyArt from "@/assets/line-art/LilyArt.vue";
+import RoseArt from "@/assets/line-art/RoseArt.vue";
+import LotusArt from "@/assets/line-art/LotusArt.vue";
 </script>
 
 <template>
@@ -22,7 +24,7 @@ import LilyArt from "@/assets/line-art/LilyArt.vue";
         <div class="banner">{{data.about.tagline}}</div>
         <div class="btn oval">LEARN MORE</div>
       </div>
-      <div class="flowerBg"><FlowerArt3/></div>
+      <div class="flowerBg"><RoseArt/></div>
       <div class="flowerSm"><CarnationArt/></div>
       <div class="imageArea">
 
@@ -42,7 +44,9 @@ import LilyArt from "@/assets/line-art/LilyArt.vue";
       </div>
       <div class="image2">
 
-      </div><div class="flower4"><LilyArt/></div>
+      </div>
+      <div class="flower4"><LilyArt/></div>
+      <div class="flower5"><LotusArt/></div>
       <div class="bgCircle2">
 
       </div>
@@ -135,24 +139,33 @@ import LilyArt from "@/assets/line-art/LilyArt.vue";
 
 .flowerBg{
   position: absolute;
-  width: 300px;
-  height: 300px;
+  width: 275px;
+  height: 275px;
   color: $primary;
-  bottom: 0;
-  left: 10%;
+  bottom: 5%;
+  left: 15%;
   transform: rotate(170deg);
   z-index: 1;
 }
 
 .flower4{
   position: absolute;
-  width: 200px;
-  height: 200px;
+  width: 225px;
+  height: 225px;
   bottom: 15%;
   right: 25%;
   z-index: 1;
   transform: rotate(90deg);
   color: $primary;
+}
+
+.flower5{
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  left: 25%;
+  rotate: 60deg;
 }
 
 .list{
@@ -253,6 +266,7 @@ import LilyArt from "@/assets/line-art/LilyArt.vue";
   background-position: center;
   background-image: url("/images/kisori/kisori.jpg");
   background-size: cover;
+  z-index: 1;
 }
 
 .infoAreaRev{
