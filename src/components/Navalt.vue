@@ -70,6 +70,7 @@ nav{
 }
 
 .title{
+  margin-top: -$paddingMd;
   position: absolute;
   display: flex;
   flex-direction: column;
