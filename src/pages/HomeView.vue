@@ -2,7 +2,7 @@
 import data from "@/data/data.ts";
 import ServiceItem from "@/components/ServiceItem.vue";
 import BranchArt from "@/assets/line-art/BranchArt.vue";
-import ValueSection from "@/views/ValueSection.vue";
+import ValueSection from "@/pages/ValueSection.vue";
 
 </script>
 

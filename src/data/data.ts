@@ -6,6 +6,15 @@ const data = {
     subtitle:"Childbirth Education | Birth Doula Support | Car Seat Safety",
     bioShort:"I offer high-quality, evidence-based childbirth education, birth doula support, and car seat safety services rooted in reproductive and birth justice. My mission is to empower families with the knowledge, confidence, and support they deserve—throughout pregnancy, birth, and beyond.",
   },
+  certs: [
+    "ICEA Certification",
+    "Basic Life Saving/CPR",
+    "Birth Doula (in-progress)",
+    "National Child Passenger Safety Technician"
+  ],
+  memberships: [
+    "Evidence-Based Birth"
+  ],
   services:[
     {
       name:'Childbirth Education',

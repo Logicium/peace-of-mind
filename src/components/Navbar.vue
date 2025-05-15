@@ -1,7 +1,5 @@
 <script setup lang="ts">
 
-import data from "@/data/data.ts";
-import LogoRight from "@/components/LogoRight.vue";
 import LogoCenter from "@/components/LogoCenter.vue";
 </script>
 

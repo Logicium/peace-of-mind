@@ -56,3 +56,13 @@ body{
 a{
   text-decoration: none;
 }
+
+input{
+  background-color: $background;
+  width: 100%;
+  border: none;
+  border-radius: 24px;
+  padding: 1vw;
+  margin-bottom: 1vw;
+  font-family: "Libre Baskerville", serif;
+}

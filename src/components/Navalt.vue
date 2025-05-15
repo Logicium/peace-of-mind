@@ -19,7 +19,7 @@ onMounted(() => {
   <nav>
     <div class="links">
       <RouterLink to="/">HOME</RouterLink>
-      <RouterLink to="/">ABOUT</RouterLink>
+      <RouterLink to="/about">ABOUT</RouterLink>
       <RouterLink to="/">WHAT I OFFER</RouterLink>
     </div>
     <div class="titleWrap">
@@ -34,7 +34,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="cta">
-      <div class="btn oval">CONTACT</div>
+      <RouterLink to="/contact" class="contact"><div class="btn oval">CONTACT</div></RouterLink>
     </div>
   </nav>
 </template>
@@ -105,7 +105,7 @@ a{
   border-bottom: 2px solid transparent;
   transition: border-bottom 0.5s;
   height: fit-content;
-  &:hover{
+  &:hover:not(.contact){
     border-bottom: 2px solid $primary;
   }
 }
