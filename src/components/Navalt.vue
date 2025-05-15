@@ -20,7 +20,7 @@ onMounted(() => {
     <div class="links">
       <RouterLink to="/">HOME</RouterLink>
       <RouterLink to="/about">ABOUT</RouterLink>
-      <RouterLink to="/">WHAT I OFFER</RouterLink>
+      <RouterLink to="/offer">WHAT I OFFER</RouterLink>
     </div>
     <div class="titleWrap">
       <div class="title" :class="{hidden:!showFull}">

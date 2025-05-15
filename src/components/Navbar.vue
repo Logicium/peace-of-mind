@@ -11,8 +11,8 @@ import LogoCenter from "@/components/LogoCenter.vue";
     <div class="nav">
       <!--          <div class="navBtn btn oval">Book Consultation</div>-->
       <RouterLink to="/about"><div class="navItem">About</div></RouterLink>
-      <div class="navItem">Services</div>
-      <div class="navItem">Contact</div>
+      <RouterLink to="/offer"><div class="navItem">What I Offer</div></RouterLink>
+      <RouterLink to="/contact"><div class="navItem">Contact</div></RouterLink>
       <div class="navItem">Resources</div>
     </div>
 

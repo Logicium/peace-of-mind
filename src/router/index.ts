@@ -25,6 +25,13 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('@/pages/ContactPage.vue'),
     },
+    {
+      path: '/offer',
+      name: 'offer',
+      // route level code-splitting
+      // which is lazy-loaded when the route is visited.
+      component: () => import('@/pages/OfferPage.vue'),
+    },
   ],
 })
 
