@@ -1,7 +1,13 @@
 $fontXl: 48px;
 $fontBig: 38px;
 $fontMed: 28px;
-$fontNormal: 15px;
+$fontNormal: 18px;
+$fontSm: 12px;
 $paddingSm: 10px;
 $paddingMd: 20px;
 $paddingLg: 30px;
+$paddingXl: 40px;
+
+.small{
+  font-size: $fontSm;
+}

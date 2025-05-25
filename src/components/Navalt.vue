@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref, onMounted} from "vue";
+import data from "@/data/data.ts";
 
 const showFull = ref(true);
 
@@ -26,11 +27,13 @@ onMounted(() => {
       <div class="title" :class="{hidden:!showFull}">
         <div class="logo"/>
         <div>Peace of Mind</div>
-        <div class="normal">BIRTH EDUCATION LLC</div>
+        <div class="normal top">BIRTH EDUCATION LLC</div>
+        <div class="normal small">{{data.about.subtitle.toUpperCase()}}</div>
       </div>
       <div class="title" :class="{hidden:showFull}">
-        <div>Peace of Mind</div>
-        <div class="normal">BIRTH EDUCATION LLC</div>
+        <div class="neg">Peace of Mind</div>
+        <div class="normal top">BIRTH EDUCATION LLC</div>
+        <div class="normal small">{{data.about.subtitle.toUpperCase()}}</div>
       </div>
     </div>
     <div class="cta">
@@ -53,6 +56,18 @@ nav{
   grid-template-columns: 1fr 2fr 1fr;
   z-index: 2;
   background-color: $background;
+}
+
+.top{
+  margin-bottom: $paddingSm;
+}
+
+.small{
+  font-size: $fontSm !important;
+}
+
+.neg{
+  line-height: calc($fontBig + $fontSm);
 }
 
 .links{
@@ -89,6 +104,7 @@ nav{
   font-size: $fontNormal;
   font-family: "Comfortaa", sans-serif !important;
   font-weight: 700;
+  text-align: center;
 }
 
 .cta{
@@ -109,6 +125,8 @@ a{
     border-bottom: 2px solid $primary;
   }
 }
+
+
 
 
 

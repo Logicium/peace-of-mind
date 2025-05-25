@@ -46,7 +46,6 @@ const submitForm = () => {
           I'd love to hear from you! Please fill out the form below and I'll get back to you as soon as possible.
         </div>
       </div>
-      <div class="decorElement"><FlowerArt3/></div>
     </div>
 
     <div class="contactFormContainer">
@@ -129,7 +128,7 @@ const submitForm = () => {
       </form>
 
       <div class="contactSideDecor">
-        <StemArt2 />
+        <FlowerArt3 />
       </div>
     </div>
   </div>

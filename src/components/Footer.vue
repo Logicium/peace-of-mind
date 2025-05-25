@@ -6,24 +6,16 @@ const instagramPosts = data.instagramPosts;
 
 <template>
   <div class="footer">
-    <div class="image badge"/>
-    <div class="links">
-      <RouterLink to="/">HOME</RouterLink>
-      <RouterLink to="/">ABOUT</RouterLink>
-      <RouterLink to="/">WHAT I OFFER</RouterLink>
-      <RouterLink to="/">CONTACT</RouterLink>
-      <RouterLink to="/">FACEBOOK</RouterLink>
-      <RouterLink to="/">INSTAGRAM</RouterLink>
 
-    </div>
-    <div class="instaWrap">
-      <InstaCard
-        v-for="(post, index) in instagramPosts"
-        :key="index"
-        :image="post.image"
-        :altText="post.alt"
-      />
-    </div>
+      <div class="image badge"/>
+      <div class="links">
+        <RouterLink to="/">HOME</RouterLink>
+        <RouterLink to="/">ABOUT</RouterLink>
+        <RouterLink to="/">WHAT I OFFER</RouterLink>
+        <RouterLink to="/">CONTACT</RouterLink>
+        <RouterLink to="/">FACEBOOK</RouterLink>
+        <RouterLink to="/">INSTAGRAM</RouterLink>
+      </div>
   </div>
 </template>
 
@@ -35,10 +27,9 @@ const instagramPosts = data.instagramPosts;
   background-color: $secondary;
   max-height: calc(200px - (2*$paddingMd));
   padding: $paddingMd;
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
+  display: flex;
+  justify-content: space-between;
   grid-gap: $paddingMd;
-
 }
 
 .badge{
@@ -52,7 +43,8 @@ const instagramPosts = data.instagramPosts;
   flex-direction: column;
   justify-content: center;
   max-height: calc(100px);
-  flex-wrap: wrap
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .instaWrap {

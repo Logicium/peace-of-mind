@@ -13,6 +13,8 @@ import CarnationArt from "@/assets/line-art/CarnationArt.vue";
 import LilyArt from "@/assets/line-art/LilyArt.vue";
 import RoseArt from "@/assets/line-art/RoseArt.vue";
 import LotusArt from "@/assets/line-art/LotusArt.vue";
+import InstaCard from "@/components/cards/InstaCard.vue";
+
 </script>
 
 <template>
@@ -20,36 +22,40 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
     <div class="panel">
 
       <div class="infoArea">
-        <div class="top">{{data.about.subtitle.toUpperCase()}}</div>
         <div class="banner">{{data.about.tagline}}</div>
         <div class="btn oval">LEARN MORE</div>
       </div>
       <div class="flowerBg"><RoseArt/></div>
       <div class="flowerSm"><CarnationArt/></div>
       <div class="imageArea">
+        <div class="image">
+          <div class="flowerMd"><FlowerArt1/></div>
+        </div>
+      </div>
 
-      </div>
-      <div class="image">
-        <div class="flowerMd"><FlowerArt1/></div>
-      </div>
-      <div class="bgCircle"/>
+<!--      <div class="bgCircle"/>-->
 
     </div>
     <div class="panel about">
-      <div></div>
+
+      <div>
+        <div class="image2">
+
+        </div>
+      </div>
+
       <div class="infoAreaRev">
         <div class="banner top">Hi, I'm Kisori!</div>
         <div class="bio normal">{{data.about.bioShort}}</div>
         <div class="btn oval">LEARN MORE</div>
       </div>
-      <div class="image2">
 
-      </div>
+
       <div class="flower4"><LilyArt/></div>
       <div class="flower5"><LotusArt/></div>
-      <div class="bgCircle2">
+<!--      <div class="bgCircle2">-->
 
-      </div>
+<!--      </div>-->
     </div>
     <div class="panelFull offers">
       <div class="reviews-title">My Services</div>
@@ -62,15 +68,26 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
         />
       </div>
       <div class="reviews-container">
-        <h3 class="reviews-title">What Our Clients Say</h3>
+        <h3 class="reviews-title">What Families Are Saying</h3>
+        <ReviewCard :text="data.reviews[0].text" name="Paige"/>
+      </div>
+      <div class="reviews-container">
+        <h3 class="reviews-title">Gallery</h3>
         <div class="reviews">
-          <ReviewCard
-            v-for="(review, index) in data.reviews"
-            :key="index"
-            :text="review.text"
-            :name="review.name"
-            :rating="review.rating"
-          />
+            <InstaCard
+              v-for="(post, index) in data.instagramPosts"
+              :key="index"
+              :image="post.image"
+              :altText="post.alt"
+            />
+
+<!--          <ReviewCard-->
+<!--            v-for="(review, index) in data.reviews"-->
+<!--            :key="index"-->
+<!--            :text="review.text"-->
+<!--            :name="review.name"-->
+<!--            :rating="review.rating"-->
+<!--          />-->
         </div>
       </div>
     </div>
@@ -120,9 +137,9 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
 
 .flowerSm{
   position: absolute;
-  width: 150px;
-  height: 150px;
-  bottom: 0;
+  width: 200px;
+  height: 200px;
+  bottom: 10%;
   right: 5%;
   color: $primary;
   transform: rotate(-90deg);
@@ -130,21 +147,21 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
 
 .flowerMd{
   position: absolute;
-  width: 250px;
-  height: 250px;
-  top: 10%;
-  left: -5%;
+  width: 175px;
+  height: 175px;
+  top: 15%;
+  left: 0%;
   color: $primary;
 }
 
 .flowerBg{
   position: absolute;
-  width: 275px;
-  height: 275px;
+  width: 250px;
+  height: 250px;
   color: $primary;
-  bottom: 5%;
+  bottom: 10%;
   left: 15%;
-  transform: rotate(170deg);
+  transform: rotate(160deg);
   z-index: 1;
 }
 
@@ -234,35 +251,31 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
 .imageArea{
   position: relative;
   z-index: 1;
-  margin-right: -100px;
+  margin-top: $paddingXl;
 }
 
 .image{
   //border-top-left-radius: 50%;
   //border-bottom-left-radius: 50%;
-  position: absolute;
   border-radius: 50%;
   aspect-ratio: 1/1;
   margin-top: 100px;
-  min-height: calc(100% - 200px);
-  max-height: calc(100% - 200px);
+  width: calc(50vw - 50px);
+  max-width: calc(50vw - 50px);
   //height: 100%;
   //width: 100%;
   right: 0;
-  transform: translateX(25%);
   background-position: 80% center;
   background-image: url("/images/pregnancy/pregnancy1.jpg");
 }
 
 .image2{
-  position: absolute;
   border-radius: 50%;
   aspect-ratio: 1/1;
   margin-top: 100px;
-  min-height: calc(100% - 200px);
-  max-height: calc(100% - 200px);
+  min-width: calc(50vw - 50px);
+  max-width: calc(50vw - 50px);
   left: 0;
-  transform: translateX(-25%);
   background-position: center;
   background-image: url("/images/kisori/kisori.jpg");
   background-size: cover;
@@ -290,10 +303,12 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
   margin-bottom: 1.5rem;
   font-weight: 500;
   font-size: $fontBig;
+  text-align: center;
 }
 
 .reviews {
   display: flex;
+  gap: 2rem;
   border-radius: 20px;
   overflow-x: scroll;
   padding-bottom: 0.5rem;

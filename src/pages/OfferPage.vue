@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import serviceDetails from "../data/serviceDetails.ts";
-import FlowerArt1 from "@/assets/line-art/FlowerArt1.vue";
-import FlowerArt2 from "@/assets/line-art/FlowerArt2.vue";
-import FlowerArt3 from "@/assets/line-art/FlowerArt3.vue";
 import RoseArt from "@/assets/line-art/RoseArt.vue";
 import LilyArt from "@/assets/line-art/LilyArt.vue";
 import LotusArt from "@/assets/line-art/LotusArt.vue";
+import CarnationArt from "@/assets/line-art/CarnationArt.vue";
 </script>
 
 <template>
   <div class="offerPage">
-    <div class="headerSection">
-      <div class="banner">What I Offer</div>
-      <div class="decorElement"><FlowerArt3/></div>
-    </div>
+
 
     <!-- Childbirth Education Section -->
     <div class="serviceSection">
+      <div class="headerSection">
+        <div class="banner">What I Offer</div>
+      </div>
       <div class="serviceHeader">
         <h2 class="serviceTitle">{{ serviceDetails.childbirth.title }}</h2>
         <div class="serviceTagline">{{ serviceDetails.childbirth.tagline }}</div>
@@ -30,7 +28,7 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
               {{ item }}
             </li>
           </ul>
-          <div class="servicePrice">{{ serviceDetails.childbirth.price }}</div>
+          <div class="servicePrice" v-html="serviceDetails.childbirth.price"></div>
         </div>
         <div class="serviceDecor">
           <RoseArt />
@@ -62,13 +60,38 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
               {{ item }}
             </li>
           </ul>
-          <div class="servicePrice">{{ serviceDetails.doula.price }}</div>
+          <div class="servicePrice" v-html="serviceDetails.doula.price"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Birth Plan Support Section -->
+    <div class="serviceSection">
+      <div class="serviceHeader">
+        <h2 class="serviceTitle">{{ serviceDetails.birthPlan.title }}</h2>
+        <div class="serviceTagline">{{ serviceDetails.birthPlan.tagline }}</div>
+      </div>
+
+      <div class="serviceDescription">{{ serviceDetails.birthPlan.fullDesc }}</div>
+
+      <div class="serviceContent">
+        <div class="serviceDetails">
+          <h3 class="includesTitle">What's Included:</h3>
+          <ul class="includesList">
+            <li v-for="(item, index) in serviceDetails.birthPlan.includes" :key="index" class="includesItem">
+              {{ item }}
+            </li>
+          </ul>
+          <div class="servicePrice" v-html="serviceDetails.birthPlan.price"></div>
+        </div>
+        <div class="serviceDecor">
+          <CarnationArt />
         </div>
       </div>
     </div>
 
     <!-- Car Seat Safety Section -->
-    <div class="serviceSection">
+    <div class="serviceSection altBackground">
       <div class="serviceHeader">
         <h2 class="serviceTitle">{{ serviceDetails.carSeat.title }}</h2>
       </div>
@@ -83,7 +106,7 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
               {{ item }}
             </li>
           </ul>
-          <div class="servicePrice">{{ serviceDetails.carSeat.price }}</div>
+          <div class="servicePrice" v-html="serviceDetails.carSeat.price"></div>
         </div>
         <div class="serviceDecor">
           <LotusArt />
@@ -95,6 +118,7 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
     <div class="slidingScaleSection">
       <div class="slidingScaleContent">
         <div class="slidingScaleText">{{ serviceDetails.slidingScale }}</div>
+        <RouterLink to="/contact"><div class="btn oval">LET'S CONNECT</div></RouterLink>
       </div>
     </div>
   </div>
@@ -112,11 +136,23 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
 }
 
 .headerSection {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 100px 0 50px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 200px;
+  padding: 50px 0 50px;
+  background-color: $secondary;
+  border-radius: 24px;
+}
+
+.background{
+  position: absolute;
+  background-color: $background;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .decorElement {
@@ -138,10 +174,11 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
 }
 
 .serviceSection {
+  position: relative;
   margin-bottom: $paddingLg;
   padding: $paddingLg;
   border-radius: 24px;
-  position: relative;
+  background-color: $background;
 }
 
 .altBackground {
@@ -155,7 +192,8 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
 
 .serviceTitle {
   font-size: $fontBig;
-  font-family: "Newsreader", serif;
+  text-decoration: underline;
+  font-family: "Comfortaa", sans-serif;
   margin-bottom: $paddingSm;
   color: $primary;
 }
@@ -222,7 +260,6 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
 }
 
 .servicePrice {
-  font-weight: 500;
   font-size: calc($fontNormal + 2px);
   margin-top: $paddingMd;
   color: $primary;
@@ -238,7 +275,7 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
 .slidingScaleSection {
   margin: $paddingLg 0;
   padding: $paddingLg;
-  background-color: $secondary;
+  background-color: #d0baf7;
   border-radius: 24px;
   position: relative;
 }
@@ -271,5 +308,10 @@ import LotusArt from "@/assets/line-art/LotusArt.vue";
   .decorElement, .decorElement2 {
     display: none;
   }
+}
+
+.btn{
+  margin-top: $paddingMd;
+  justify-self: center;
 }
 </style>

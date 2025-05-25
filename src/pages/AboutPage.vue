@@ -17,10 +17,15 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
         <div class="aboutImage"></div>
       </div>
       <div class="flowerDecor"><FlowerArt1/></div>
-      <div class="bgCircle"></div>
     </div>
 
     <div class="panelFull">
+
+      <div class="bioSection">
+        <div class="sectionTitle">My Mission</div>
+        <div class="bioText">{{ data.about.introShort }}</div>
+      </div>
+
       <div class="certSection">
         <div class="sectionTitle">Certifications</div>
         <div class="certList">
@@ -41,11 +46,7 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
         </div>
       </div>
 
-      <div class="bioSection">
-        <div class="sectionTitle">My Mission</div>
-        <div class="bioText">{{ data.about.introShort }}</div>
-        <div class="flowerDecor2"><FlowerArt2/></div>
-      </div>
+
     </div>
   </div>
 </template>
@@ -96,17 +97,16 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
 .imageArea {
   position: relative;
   z-index: 1;
+  margin-top: $paddingXl;
 }
 
 .aboutImage {
-  position: absolute;
   border-radius: 50%;
   aspect-ratio: 1/1;
   margin-top: 100px;
-  min-height: calc(100% - 200px);
-  max-height: calc(100% - 200px);
+  width: calc(50vw - 50px);
+  max-width: calc(50vw - 50px);
   right: 0;
-  transform: translateX(25%);
   background-position: center;
   background-image: url("/images/pregnancy/pregnancy3.jpg");
   background-size: cover;
@@ -147,9 +147,10 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
 
 .sectionTitle {
   font-size: $fontBig;
-  font-family: "Newsreader", serif;
+  font-family: "Comfortaa", sans-serif;
   margin-bottom: $paddingMd;
   color: $primary;
+  text-align: center;
 }
 
 .certSection, .membershipSection, .bioSection {
@@ -174,14 +175,17 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
 
 .certIcon, .membershipIcon {
   width: 50px;
+  min-width: 50px;
+  min-height: 50px;
   height: 50px;
   margin-right: $paddingSm;
   color: $primary;
 }
 
 .certName, .membershipName {
-  font-size: $fontNormal;
+  font-size: 20px;
   font-weight: 500;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .bioText {

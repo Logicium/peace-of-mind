@@ -7,15 +7,21 @@ const data = {
     bioShort:"I offer high-quality, evidence-based childbirth education, birth doula support, and car seat safety services rooted in reproductive and birth justice. My mission is to empower families with the knowledge, confidence, and support they deserve—throughout pregnancy, birth, and beyond.",
   },
   certs: [
-    "ICEA Certification",
+    "International Childbirth Education Association (ICEA) Certification",
     "Basic Life Saving/CPR",
-    "Birth Doula (in-progress)",
+    "Birth Doula  (certification in-progress)",
     "National Child Passenger Safety Technician"
   ],
   memberships: [
-    "Evidence-Based Birth"
+    "Evidence-Based Birth Professional Member",
+    "International Childbirth Education Association (ICEA) Member",
   ],
   services:[
+    {
+      name:'Birth Plan Support',
+      image:'/images/pregnancy/pregnancy1.jpg',
+      desc:'I’ll guide you through creating a personalized birth plan while providing tailored education on each part of the birth experience. Great for those who want to understand their options and clearly communicate their preferences to their birth team. Ideal for first-time parents or anyone seeking clarity and confidence in their birth plan.'
+    },
     {
       name:'Childbirth Education',
       image:'/images/childbirth-ed/edu1.jpg',
@@ -57,8 +63,15 @@ const data = {
   ],
   reviews: [
     {
-      text: "Kisori's childbirth education class was transformative. I felt empowered and prepared for my birth experience.",
-      name: "Sarah Johnson",
+      text: "We went through Kisori’s Peace of Mind Childbirth Education program when we were expecting our first baby. " +
+        "When we started, I really had no idea what to expect about the labor and delivery process. " +
+        "<u>After the program, I feel like all of the knowledge helped build our confidence leading up to labor. </u>" +
+        "During labor we were able to understand what was going on and knew which medical interventions and pain management techniques we were going to use. " +
+        "I can’t imagine going through the labor and delivery process without all of the information presented by Kisori. " +
+        "<u>Throughout the program, she was calm, kind, and extremely knowledgeable about anything we had questions about. </u>" +
+        "I felt like we could be open and honest with her in a judgment free space! " +
+        "<u>I would absolutely recommend using Peace of Mind for your childbirth education.</u>",
+      name: "Paige",
       rating: 5
     },
     {
