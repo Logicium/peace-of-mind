@@ -130,9 +130,10 @@ import InstaCard from "@/components/cards/InstaCard.vue";
   background-color: $secondary;
   border-radius: 45px;
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   grid-gap: 2rem;
   padding:2rem;
+  justify-items: center;
 }
 
 .flowerSm{

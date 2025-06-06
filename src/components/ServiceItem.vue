@@ -9,8 +9,10 @@ const imageUrl = computed(()=> 'url("'+props.image+'")').value;
 
 <template>
   <div class="serviceItem">
-    <div class="serviceImg"></div>
-    <div class="serviceName">{{name}}</div>
+    <div class="flex">
+      <div class="serviceImg"></div>
+      <div class="serviceName top">{{name}}</div>
+    </div>
     <div class="serviceDesc">{{desc}}</div>
     <RouterLink to="/offer"><div class="btn underline">Learn More</div></RouterLink>
   </div>
@@ -19,12 +21,14 @@ const imageUrl = computed(()=> 'url("'+props.image+'")').value;
 <style lang="scss" scoped>
 
 @import "../assets/Colors";
+@import "../assets/Text";
 
 .serviceItem{
   display: flex;
   flex-direction: column;
   text-align: center;
   align-items: center;
+  justify-content: space-between;
   height: 100%;
 }
 
@@ -38,7 +42,11 @@ const imageUrl = computed(()=> 'url("'+props.image+'")').value;
   background-image: v-bind(imageUrl);
   background-size: cover;
   background-position: 100% 100%;
-  width: 50%;
+  min-width:100%;
+  margin-bottom: 1vw;
+}
+
+.top{
   margin-bottom: 1vw;
 }
 
@@ -58,6 +66,12 @@ const imageUrl = computed(()=> 'url("'+props.image+'")').value;
 
 .serviceDesc{
   margin-bottom: 1vw;
+}
+
+.flex{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
 }
 
 .underline{

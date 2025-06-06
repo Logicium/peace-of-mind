@@ -108,7 +108,7 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
   max-width: calc(50vw - 50px);
   right: 0;
   background-position: center;
-  background-image: url("/images/pregnancy/pregnancy3.jpg");
+  background-image: url("/images/kisori/kisori3.heic");
   background-size: cover;
 }
 
