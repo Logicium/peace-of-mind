@@ -127,12 +127,20 @@ import FlowerCard from "@/components/cards/FlowerCard.vue";
 @import "../assets/Colors";
 
 .panel,.panelFull{
+  max-width: 1200px;
   position: relative;
   display: grid;
   height: calc(100vh - 200px);
   grid-template-columns: 1fr 1fr;
   padding:100px 24px 100px 24px;
-  overflow: hidden;
+}
+
+.home{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .panelFull{

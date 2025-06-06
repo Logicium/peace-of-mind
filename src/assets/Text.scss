@@ -6,7 +6,7 @@ $fontNormal-base: 18px;
 $fontSm-base: 12px;
 
 // Responsive font sizes using a combination of rem and vw units
-$fontXl: clamp(2.5rem, 2rem + 2vw, 3rem); // ~40px to 48px
+$fontXl: clamp(1rem, 1rem + 3vw, 3rem); // ~40px to 48px
 $fontBig: clamp(2rem, 1.8rem + 1vw, 2.4rem); // ~32px to 38px
 $fontMed: clamp(1.5rem, 1.3rem + 0.8vw, 1.75rem); // ~24px to 28px
 $fontNormal: clamp(1rem, 0.9rem + 0.5vw, 1.125rem); // ~16px to 18px
