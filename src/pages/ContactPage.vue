@@ -39,98 +39,106 @@ const submitForm = () => {
 
 <template>
   <div class="contactPage">
-    <div class="contactHeader">
-      <div class="headerContent">
-        <div class="banner">Contact Me</div>
-        <div class="contactText">
-          I'd love to hear from you! Please fill out the form below and I'll get back to you as soon as possible.
+
+    <div class="contactSection">
+
+      <div class="contactHeader">
+        <div class="headerContent">
+          <div class="banner">Contact Me</div>
+          <div class="contactText">
+            I'd love to hear from you! Please fill out the form below and I'll get back to you as soon as possible.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="contactFormContainer">
-      <form @submit.prevent="submitForm" class="contactForm">
-        <div class="formRow">
+      <div class="contactFormContainer">
+        <form @submit.prevent="submitForm" class="contactForm">
+          <div class="formRow">
+            <div class="formGroup">
+              <label for="firstName" class="formLabel">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                v-model="firstName"
+                class="formInput"
+                required
+              />
+            </div>
+
+            <div class="formGroup">
+              <label for="lastName" class="formLabel">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                v-model="lastName"
+                class="formInput"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="formRow">
+            <div class="formGroup">
+              <label for="email" class="formLabel">Email</label>
+              <input
+                type="email"
+                id="email"
+                v-model="email"
+                class="formInput"
+                required
+              />
+            </div>
+
+            <div class="formGroup">
+              <label for="phone" class="formLabel">Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                v-model="phone"
+                class="formInput"
+                required
+              />
+            </div>
+          </div>
+
           <div class="formGroup">
-            <label for="firstName" class="formLabel">First Name</label>
+            <label for="service" class="formLabel">Which services are you interested in?</label>
+            <select
+              id="service"
+              v-model="interestedService"
+              class="formSelect"
+              required
+            >
+              <option value="" disabled selected>Select a service</option>
+              <option v-for="service in services" :key="service" :value="service">
+                {{ service }}
+              </option>
+            </select>
+          </div>
+
+          <div class="formGroup">
+            <label for="referral" class="formLabel">How did you hear about me?</label>
             <input
               type="text"
-              id="firstName"
-              v-model="firstName"
+              id="referral"
+              v-model="referralSource"
               class="formInput"
               required
             />
           </div>
 
-          <div class="formGroup">
-            <label for="lastName" class="formLabel">Last Name</label>
-            <input
-              type="text"
-              id="lastName"
-              v-model="lastName"
-              class="formInput"
-              required
-            />
-          </div>
+          <button type="submit" class="submitButton btn oval">SUBMIT</button>
+        </form>
+
+        <div class="contactSideDecor">
+          <FlowerArt3 />
         </div>
-
-        <div class="formRow">
-          <div class="formGroup">
-            <label for="email" class="formLabel">Email</label>
-            <input
-              type="email"
-              id="email"
-              v-model="email"
-              class="formInput"
-              required
-            />
-          </div>
-
-          <div class="formGroup">
-            <label for="phone" class="formLabel">Phone Number</label>
-            <input
-              type="tel"
-              id="phone"
-              v-model="phone"
-              class="formInput"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="formGroup">
-          <label for="service" class="formLabel">Which services are you interested in?</label>
-          <select
-            id="service"
-            v-model="interestedService"
-            class="formSelect"
-            required
-          >
-            <option value="" disabled selected>Select a service</option>
-            <option v-for="service in services" :key="service" :value="service">
-              {{ service }}
-            </option>
-          </select>
-        </div>
-
-        <div class="formGroup">
-          <label for="referral" class="formLabel">How did you hear about me?</label>
-          <input
-            type="text"
-            id="referral"
-            v-model="referralSource"
-            class="formInput"
-            required
-          />
-        </div>
-
-        <button type="submit" class="submitButton btn oval">SUBMIT</button>
-      </form>
-
-      <div class="contactSideDecor">
-        <FlowerArt3 />
       </div>
+
     </div>
+
+
+
   </div>
 </template>
 
@@ -141,20 +149,33 @@ const submitForm = () => {
 .contactPage {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 200px);
+  min-height:  calc(100vh - 200px);
   padding: 0 24px;
+  background-color: $background;
+}
+
+.contactSection {
+  position: relative;
+  padding: $paddingLg;
+  border-radius: 24px;
+  background-color: $background;
 }
 
 .contactHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 100px 0 50px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 200px;
+  padding: 50px 0 50px;
+  background-color: $secondary;
+  border-radius: 24px;
+  margin-bottom: 50px;
 }
 
 .headerContent {
-  max-width: 60%;
+  max-width: 80%;
+  text-align: center;
 }
 
 .contactText {
@@ -167,7 +188,7 @@ const submitForm = () => {
   position: absolute;
   width: 250px;
   height: 250px;
-  right: 5%;
+  right: 0;
   top: 20%;
   color: $primary;
 }
@@ -175,7 +196,8 @@ const submitForm = () => {
 .contactFormContainer {
   display: flex;
   position: relative;
-  margin-bottom: $paddingLg;
+  margin-top: $paddingLg;
+  padding-bottom: 50px;
 }
 
 .contactForm {
@@ -232,10 +254,11 @@ const submitForm = () => {
 
 .contactSideDecor {
   position: absolute;
-  width: 150px;
-  height: 150px;
-  bottom: 10%;
-  left: 5%;
+  width: 200px;
+  height: 200px;
+  bottom: 2%;
+  left: -2%;
+  transform: rotate(-45deg);
   color: $primary;
   z-index: 1;
 }
