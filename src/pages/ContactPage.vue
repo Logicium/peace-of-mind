@@ -152,6 +152,8 @@ const submitForm = () => {
   min-height:  calc(100vh - 200px);
   padding: 0 24px;
   background-color: $background;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .contactSection {

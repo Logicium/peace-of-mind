@@ -93,6 +93,8 @@ import ServicesSectionPanel from "@/components/cards/ServicesSectionPanel.vue";
   flex-direction: column;
   min-height: calc(100vh - 200px);
   padding: 0 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .background{

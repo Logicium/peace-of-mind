@@ -68,6 +68,8 @@ import FlowerCard from "@/components/cards/FlowerCard.vue";
 }
 
 .panel, .panelFull {
+  max-width: 1200px;
+  margin: 0 auto;
   position: relative;
   display: grid;
   height: calc(100vh - 200px);
