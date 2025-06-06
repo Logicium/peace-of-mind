@@ -53,7 +53,7 @@ const resetNav = function() {
       <div class="title" :class="{hidden:showFull}">
         <div class="neg">Peace of Mind</div>
         <div class="normal top">BIRTH EDUCATION LLC</div>
-        <div class="normal small">{{data.about.subtitle}}</div>
+        <div class="normal small mobile">{{data.about.subtitle}}</div>
       </div>
     </div>
 
@@ -222,7 +222,7 @@ a{
 }
 
 @media (max-width: 480px) {
-  .cta {
+  .cta,.mobile{
     display: none;
   }
 }

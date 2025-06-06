@@ -152,6 +152,7 @@ import FlowerCard from "@/components/cards/FlowerCard.vue";
 
 .about{
   background-color: $background;
+  padding: 0px 24px 100px 24px;
 }
 .offersWrap{
   background-color: $secondary;
@@ -276,8 +277,8 @@ import FlowerCard from "@/components/cards/FlowerCard.vue";
 
   .infoArea, .infoAreaRev {
     order: 1;
-    text-align: center;
-    align-items: center;
+    text-align: center !important;
+    align-items: center !important;
   }
 
   .banner, .bio {
