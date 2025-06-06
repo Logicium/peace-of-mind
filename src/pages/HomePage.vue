@@ -23,7 +23,7 @@ import InstaCard from "@/components/cards/InstaCard.vue";
 
       <div class="infoArea">
         <div class="banner">{{data.about.tagline}}</div>
-        <div class="btn oval">LEARN MORE</div>
+        <RouterLink to="/about"><div class="btn oval">LEARN MORE</div></RouterLink>
       </div>
       <div class="flowerBg"><RoseArt/></div>
       <div class="flowerSm"><CarnationArt/></div>
@@ -47,7 +47,7 @@ import InstaCard from "@/components/cards/InstaCard.vue";
       <div class="infoAreaRev">
         <div class="banner top">Hi, I'm Kisori!</div>
         <div class="bio normal">{{data.about.bioShort}}</div>
-        <div class="btn oval">LEARN MORE</div>
+        <RouterLink to="/about"><div class="btn oval">LEARN MORE</div></RouterLink>
       </div>
 
 
@@ -139,8 +139,8 @@ import InstaCard from "@/components/cards/InstaCard.vue";
   position: absolute;
   width: 200px;
   height: 200px;
-  bottom: 10%;
-  right: 5%;
+  bottom: 5%;
+  right: 0%;
   color: $primary;
   transform: rotate(-90deg);
 }
@@ -183,6 +183,7 @@ import InstaCard from "@/components/cards/InstaCard.vue";
   top: 10%;
   left: 25%;
   rotate: 60deg;
+  z-index: 0;
 }
 
 .list{
@@ -270,14 +271,15 @@ import InstaCard from "@/components/cards/InstaCard.vue";
 }
 
 .image2{
+  position: relative;
   border-radius: 50%;
   aspect-ratio: 1/1;
   margin-top: 100px;
   min-width: calc(50vw - 50px);
   max-width: calc(50vw - 50px);
   left: 0;
-  background-position: center;
-  background-image: url("/images/kisori/kisori.jpg");
+  background-position: 100% 10%;
+  background-image: url("/images/kisori/kisori2.heic");
   background-size: cover;
   z-index: 1;
 }
@@ -319,5 +321,10 @@ import InstaCard from "@/components/cards/InstaCard.vue";
 
 .reviews::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 </style>

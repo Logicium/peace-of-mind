@@ -20,7 +20,7 @@ const data = {
     {
       name:'Birth Plan Support',
       image:'/images/pregnancy/pregnancy1.jpg',
-      desc:'I’ll guide you through creating a personalized birth plan while providing tailored education on each part of the birth experience. Great for those who want to understand their options and clearly communicate their preferences to their birth team. Ideal for first-time parents or anyone seeking clarity and confidence in their birth plan.'
+      desc: 'Personalized support in creating your birth plan, understanding your options, and communicating effectively with your birth team. Ideal for first-time parents seeking clarity and confidence.'
     },
     {
       name:'Childbirth Education',

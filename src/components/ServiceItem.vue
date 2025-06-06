@@ -12,7 +12,7 @@ const imageUrl = computed(()=> 'url("'+props.image+'")').value;
     <div class="serviceImg"></div>
     <div class="serviceName">{{name}}</div>
     <div class="serviceDesc">{{desc}}</div>
-    <div class="btn underline">Learn More</div>
+    <RouterLink to="/offer"><div class="btn underline">Learn More</div></RouterLink>
   </div>
 </template>
 
@@ -71,6 +71,11 @@ const imageUrl = computed(()=> 'url("'+props.image+'")').value;
   height: 45px;
   border-radius: 45px;
   width: fit-content;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 </style>
