@@ -54,7 +54,7 @@ nav{
   padding: $paddingMd;
   display: grid;
   grid-template-columns: 1fr 1.5fr 1fr;
-  z-index: 2;
+  z-index: 10;
   background-color: $background;
 }
 
