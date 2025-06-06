@@ -64,6 +64,7 @@ import ServicesSectionPanel from "@/components/cards/ServicesSectionPanel.vue";
       :description="serviceDetails.carSeat.fullDesc"
       :includes="serviceDetails.carSeat.includes"
       :price="serviceDetails.carSeat.price"
+      :detailsOnRight="false"
       :altBackground="true"
       imageUrl="/images/carseat/seat3.JPEG"
       imageAlt="Car Seat Safety"

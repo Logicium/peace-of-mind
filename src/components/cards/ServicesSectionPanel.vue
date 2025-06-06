@@ -226,32 +226,12 @@ defineProps({
     color: $primary;
 
     &:nth-child(1) {
-      top: -15%;
-      left: 10%;
-      transform: rotate(45deg);
-      z-index: 1;
-    }
-
-    &:nth-child(2) {
-      bottom: -10%;
-      right: 5%;
+      top: -10% !important;
+      left: 0 !important;
       transform: rotate(-30deg);
-      z-index: 0;
-    }
-
-    &:nth-child(3) {
-      top: 50%;
-      left: -10%;
-      transform: translateY(-50%) rotate(90deg);
-      z-index: 3;
-    }
-
-    &:nth-child(4) {
-      top: 10%;
-      right: -5%;
-      transform: rotate(-60deg);
       z-index: 1;
     }
+
   }
 }
 
@@ -310,7 +290,7 @@ defineProps({
   }
 
   .circularImage {
-    max-width: 120px;
+    max-width: 400px;
   }
 
   .serviceDescription {
