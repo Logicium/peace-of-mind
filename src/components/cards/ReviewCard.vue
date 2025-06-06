@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
 <div class="card">
-  <h2 class="review-text" v-html="text"></h2>
+  <h2 class="review-text" v-html="''+text"></h2>
   <div class="reviewer-info">
     <div class="name">- {{ name }}</div>
     <div class="rating">
