@@ -105,13 +105,29 @@ const data = {
       alt: "Instagram post 2"
     },
     {
-      image: "/images/insta/IMG_0379.heic",
+      image: "/images/insta/IMG_0110.heic",
       alt: "Instagram post 3"
     },
     {
-      image: "/images/insta/IMG_0473.heic",
+      image: "/images/insta/IMG_0311.heic",
       alt: "Instagram post 4"
-    }
+    },
+    {
+      image: "/images/insta/IMG_0341.heic",
+      alt: "Instagram post 5"
+    },
+    {
+      image: "/images/insta/IMG_0355.heic",
+      alt: "Instagram post 6"
+    },
+    // {
+    //   image: "/images/insta/IMG_0376.heic",
+    //   alt: "Instagram post 7"
+    // },
+    // {
+    //   image: "/images/insta/IMG_0442.heic",
+    //   alt: "Instagram post 8"
+    // }
   ]
 }
 

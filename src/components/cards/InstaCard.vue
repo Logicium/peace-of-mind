@@ -20,10 +20,10 @@ defineProps<{
 }
 
 .insta-image {
-  height: 250px;
+  height: 325px;
   width: 250px;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 45px;
 }
 
 </style>

@@ -2,13 +2,8 @@
 
 import data from "../data/data.ts";
 import FlowerArt1 from "@/assets/line-art/FlowerArt1.vue";
-import FlowerArt2 from "@/assets/line-art/FlowerArt2.vue";
-import FlowerArt3 from "@/assets/line-art/FlowerArt3.vue";
 import ServiceItem from "@/components/ServiceItem.vue";
 import ReviewCard from "@/components/cards/ReviewCard.vue";
-import StemArt1 from "@/assets/line-art/StemArt1.vue";
-import StemArt2 from "@/assets/line-art/StemArt2.vue";
-import StemArt3 from "@/assets/line-art/StemArt3.vue";
 import CarnationArt from "@/assets/line-art/CarnationArt.vue";
 import LilyArt from "@/assets/line-art/LilyArt.vue";
 import RoseArt from "@/assets/line-art/RoseArt.vue";
