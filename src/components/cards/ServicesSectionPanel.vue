@@ -266,26 +266,10 @@ defineProps({
       height: calc(100px + 2vw);
 
       &:nth-child(1) {
-        top: -5%;
-        left: 5%;
+        top: -5% !important;
+        left: 5% !important;
       }
 
-      &:nth-child(2) {
-        bottom: -5%;
-        right: 0;
-      }
-
-      &:nth-child(3) {
-        top: 50%;
-        left: -5%;
-        transform: translateY(-50%) rotate(90deg);
-      }
-
-      &:nth-child(4) {
-        top: 5%;
-        right: 0;
-        transform: rotate(-45deg);
-      }
     }
   }
 

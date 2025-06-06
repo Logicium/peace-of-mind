@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import {ref, onMounted} from "vue";
 import data from "@/data/data.ts";
+import MenuIcon from "@/components/icons/MenuIcon.vue";
+import CloseIcon from "@/components/icons/CloseIcon.vue";
+import IconToggle from "@/components/cards/IconToggle.vue";
 
 const showFull = ref(true);
+const toggleMenu = ref(false);
 
 // Function to handle scroll events
 const handleScroll = () => {
@@ -14,15 +18,31 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll);
 });
 
+const toggleMenuClick = function() {
+  toggleMenu.value = !toggleMenu.value;
+};
+
+const resetNav = function() {
+  toggleMenu.value = false;
+};
+
 </script>
 
 <template>
   <nav>
+    <div class="button menu" @click="toggleMenuClick">
+      <IconToggle :is-active="toggleMenu">
+        <template #inactive><MenuIcon/></template>
+        <template #active><CloseIcon/></template>
+      </IconToggle>
+    </div>
+
     <div class="links">
       <RouterLink to="/">HOME</RouterLink>
       <RouterLink to="/about">ABOUT</RouterLink>
       <RouterLink to="/offer">WHAT I OFFER</RouterLink>
     </div>
+
     <div class="titleWrap">
       <div class="title" :class="{hidden:!showFull}">
         <div class="logo"/>
@@ -36,9 +56,19 @@ onMounted(() => {
         <div class="normal small">{{data.about.subtitle}}</div>
       </div>
     </div>
+
     <div class="cta">
       <RouterLink to="/contact" class="contact"><div class="btn oval">CONTACT</div></RouterLink>
     </div>
+
+    <transition name="fade">
+      <div class="mobileLinks" v-if="toggleMenu">
+        <RouterLink to="/" @click="resetNav()">HOME</RouterLink>
+        <RouterLink to="/about" @click="resetNav()">ABOUT</RouterLink>
+        <RouterLink to="/offer" @click="resetNav()">WHAT I OFFER</RouterLink>
+        <RouterLink to="/contact" @click="resetNav()">CONTACT</RouterLink>
+      </div>
+    </transition>
   </nav>
 </template>
 
@@ -124,6 +154,76 @@ a{
   height: fit-content;
   &:hover:not(.contact){
     border-bottom: 2px solid $primary;
+  }
+}
+
+.button{
+  height: 45px;
+  width: 45px;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  border-radius: 45px;
+  cursor: pointer;
+  color: $primary;
+  justify-content: center;
+}
+
+.menu{
+  z-index: 11;
+  display: none;
+  background-color: $primary;
+  color: white;
+}
+
+.mobileLinks{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 70%;
+  height: 100vh;
+  background-color: $primary;
+  padding-top: calc(100px + 2rem);
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  z-index: 10;
+
+  a {
+    color: white;
+    font-size: 1.5rem;
+    &:hover {
+      border-bottom: 2px solid white;
+    }
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  nav {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+
+  .links{
+    display: none;
+  }
+
+  .menu {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta {
+    display: none;
   }
 }
 

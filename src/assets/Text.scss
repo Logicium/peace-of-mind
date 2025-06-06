@@ -1,13 +1,42 @@
-$fontXl: 48px;
-$fontBig: 38px;
-$fontMed: 28px;
-$fontNormal: 18px;
-$fontSm: 12px;
+// Base font sizes in pixels (for reference)
+$fontXl-base: 48px;
+$fontBig-base: 38px;
+$fontMed-base: 28px;
+$fontNormal-base: 18px;
+$fontSm-base: 12px;
+
+// Responsive font sizes using a combination of rem and vw units
+$fontXl: clamp(2.5rem, 2rem + 2vw, 3rem); // ~40px to 48px
+$fontBig: clamp(2rem, 1.8rem + 1vw, 2.4rem); // ~32px to 38px
+$fontMed: clamp(1.5rem, 1.3rem + 0.8vw, 1.75rem); // ~24px to 28px
+$fontNormal: clamp(1rem, 0.9rem + 0.5vw, 1.125rem); // ~16px to 18px
+$fontSm: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem); // ~12px to 13px
+
+// Padding values (unchanged)
 $paddingXs: 5px;
 $paddingSm: 10px;
 $paddingMd: 20px;
 $paddingLg: 30px;
 $paddingXl: 40px;
+
+// Media queries for different screen sizes
+@mixin small-screen {
+  @media (max-width: 576px) {
+    @content;
+  }
+}
+
+@mixin medium-screen {
+  @media (min-width: 577px) and (max-width: 992px) {
+    @content;
+  }
+}
+
+@mixin large-screen {
+  @media (min-width: 993px) {
+    @content;
+  }
+}
 
 .small{
   font-size: $fontSm;

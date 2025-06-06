@@ -4,6 +4,7 @@ import FlowerArt1 from "@/assets/line-art/FlowerArt1.vue";
 import FlowerArt2 from "@/assets/line-art/FlowerArt2.vue";
 import LilyArt from "@/assets/line-art/LilyArt.vue";
 import RoseArt from "@/assets/line-art/RoseArt.vue";
+import FlowerCard from "@/components/cards/FlowerCard.vue";
 </script>
 
 <template>
@@ -16,7 +17,13 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
       <div class="imageArea">
         <div class="aboutImage"></div>
       </div>
-      <div class="flowerDecor"><FlowerArt1/></div>
+      <FlowerCard
+        size="big"
+        :position="{ bottom: '0%', left: '15%' }"
+        :zIndex="1"
+      >
+        <FlowerArt1/>
+      </FlowerCard>
     </div>
 
     <div class="panelFull">
@@ -104,33 +111,39 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
   border-radius: 50%;
   aspect-ratio: 1/1;
   margin-top: 100px;
-  width: calc(50vw - 50px);
+  width: 100%;
   max-width: calc(50vw - 50px);
   right: 0;
   background-position: center;
   background-image: url("/images/kisori/kisori3.heic");
   background-size: cover;
+  position: relative;
 }
 
-.flowerDecor {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  bottom: 10%;
-  left: 15%;
-  color: $primary;
-  z-index: 1;
+@media (max-width: 768px) {
+  .panel {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .aboutImage {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .infoArea {
+    order: 1;
+    text-align: center;
+    align-items: center;
+  }
+
+  .aboutText, .banner {
+    width: 100%;
+  }
 }
 
-.flowerDecor2 {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  bottom: 5%;
-  right: 10%;
-  color: $primary;
-  z-index: 1;
-}
+// Flower styles now handled by FlowerCard component
 
 .bgCircle {
   position: absolute;
@@ -161,7 +174,7 @@ import RoseArt from "@/assets/line-art/RoseArt.vue";
 
 .certList, .membershipList {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: $paddingMd;
 }
 

@@ -14,6 +14,7 @@ import LilyArt from "@/assets/line-art/LilyArt.vue";
 import RoseArt from "@/assets/line-art/RoseArt.vue";
 import LotusArt from "@/assets/line-art/LotusArt.vue";
 import InstaCard from "@/components/cards/InstaCard.vue";
+import FlowerCard from "@/components/cards/FlowerCard.vue";
 
 </script>
 
@@ -25,11 +26,29 @@ import InstaCard from "@/components/cards/InstaCard.vue";
         <div class="banner">{{data.about.tagline}}</div>
         <RouterLink to="/about"><div class="btn oval">LEARN MORE</div></RouterLink>
       </div>
-      <div class="flowerBg"><RoseArt/></div>
-      <div class="flowerSm"><CarnationArt/></div>
+      <FlowerCard
+        size="big"
+        :position="{ bottom: '10%', left: '15%' }"
+        :rotation="160"
+        :zIndex="1"
+      >
+        <RoseArt/>
+      </FlowerCard>
+      <FlowerCard
+        size="small"
+        :position="{ bottom: '5%', right: '0%' }"
+        :rotation="-90"
+      >
+        <CarnationArt/>
+      </FlowerCard>
       <div class="imageArea">
         <div class="image">
-          <div class="flowerMd"><FlowerArt1/></div>
+          <FlowerCard
+            size="medium"
+            :position="{ top: '15%', left: '0%' }"
+          >
+            <FlowerArt1/>
+          </FlowerCard>
         </div>
       </div>
 
@@ -50,9 +69,22 @@ import InstaCard from "@/components/cards/InstaCard.vue";
         <RouterLink to="/about"><div class="btn oval">LEARN MORE</div></RouterLink>
       </div>
 
-
-      <div class="flower4"><LilyArt/></div>
-      <div class="flower5"><LotusArt/></div>
+      <FlowerCard
+        size="big"
+        :position="{ bottom: '15%', right: '25%' }"
+        :rotation="90"
+        :zIndex="1"
+      >
+        <LilyArt/>
+      </FlowerCard>
+      <FlowerCard
+        size="medium"
+        :position="{ top: '10%', left: '25%' }"
+        :rotation="60"
+        :zIndex="0"
+      >
+        <LotusArt/>
+      </FlowerCard>
 <!--      <div class="bgCircle2">-->
 
 <!--      </div>-->
@@ -136,56 +168,7 @@ import InstaCard from "@/components/cards/InstaCard.vue";
   justify-items: center;
 }
 
-.flowerSm{
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  bottom: 5%;
-  right: 0%;
-  color: $primary;
-  transform: rotate(-90deg);
-}
-
-.flowerMd{
-  position: absolute;
-  width: 175px;
-  height: 175px;
-  top: 15%;
-  left: 0%;
-  color: $primary;
-}
-
-.flowerBg{
-  position: absolute;
-  width: 250px;
-  height: 250px;
-  color: $primary;
-  bottom: 10%;
-  left: 15%;
-  transform: rotate(160deg);
-  z-index: 1;
-}
-
-.flower4{
-  position: absolute;
-  width: 225px;
-  height: 225px;
-  bottom: 15%;
-  right: 25%;
-  z-index: 1;
-  transform: rotate(90deg);
-  color: $primary;
-}
-
-.flower5{
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  top: 10%;
-  left: 25%;
-  rotate: 60deg;
-  z-index: 0;
-}
+// Flower styles now handled by FlowerCard component
 
 .list{
   .button{
@@ -257,18 +240,16 @@ import InstaCard from "@/components/cards/InstaCard.vue";
 }
 
 .image{
-  //border-top-left-radius: 50%;
-  //border-bottom-left-radius: 50%;
   border-radius: 50%;
   aspect-ratio: 1/1;
   margin-top: 100px;
-  width: calc(50vw - 50px);
+  width: 100%;
   max-width: calc(50vw - 50px);
-  //height: 100%;
-  //width: 100%;
   right: 0;
   background-position: 80% center;
   background-image: url("/images/pregnancy/pregnancy1.jpg");
+  background-size: cover;
+  position: relative;
 }
 
 .image2{
@@ -276,13 +257,37 @@ import InstaCard from "@/components/cards/InstaCard.vue";
   border-radius: 50%;
   aspect-ratio: 1/1;
   margin-top: 100px;
-  min-width: calc(50vw - 50px);
+  width: 100%;
   max-width: calc(50vw - 50px);
   left: 0;
   background-position: 100% 10%;
   background-image: url("/images/kisori/kisori2.heic");
   background-size: cover;
   z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .panel, .panelFull {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .image, .image2 {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: $paddingLg;
+  }
+
+  .infoArea, .infoAreaRev {
+    order: 1;
+    text-align: center;
+    align-items: center;
+  }
+
+  .banner, .bio {
+    width: 100%;
+  }
 }
 
 .infoAreaRev{
