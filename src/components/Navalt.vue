@@ -53,7 +53,7 @@ nav{
   max-height: calc(100px - (2*$paddingMd));
   padding: $paddingMd;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 1.5fr 1fr;
   z-index: 2;
   background-color: $background;
 }
@@ -75,6 +75,7 @@ nav{
   justify-content: space-between;
   max-height: calc(100px - (2*$paddingMd));
   align-items: center;
+  gap: $paddingMd;
 }
 
 .titleWrap{

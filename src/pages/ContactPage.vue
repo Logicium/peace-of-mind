@@ -263,6 +263,12 @@ const submitForm = () => {
   z-index: 1;
 }
 
+.button{
+  outline: none;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 @media (max-width: 768px) {
   .headerContent {
     max-width: 100%;
