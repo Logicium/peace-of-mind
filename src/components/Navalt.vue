@@ -28,12 +28,12 @@ onMounted(() => {
         <div class="logo"/>
         <div>Peace of Mind</div>
         <div class="normal top">BIRTH EDUCATION LLC</div>
-        <div class="normal small">{{data.about.subtitle.toUpperCase()}}</div>
+        <div class="normal small">{{data.about.subtitle}}</div>
       </div>
       <div class="title" :class="{hidden:showFull}">
         <div class="neg">Peace of Mind</div>
         <div class="normal top">BIRTH EDUCATION LLC</div>
-        <div class="normal small">{{data.about.subtitle.toUpperCase()}}</div>
+        <div class="normal small">{{data.about.subtitle}}</div>
       </div>
     </div>
     <div class="cta">
@@ -59,7 +59,7 @@ nav{
 }
 
 .top{
-  margin-bottom: $paddingSm;
+  margin-bottom: $paddingXs;
 }
 
 .small{
