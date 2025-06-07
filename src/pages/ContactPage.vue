@@ -22,7 +22,7 @@ const submitStatus = reactive({
 });
 
 // Function to show message with timeout
-const showMessage = (message, isSuccess) => {
+const showMessage = (message:any, isSuccess:any) => {
   submitStatus.message = message;
   submitStatus.success = isSuccess;
   submitStatus.visible = true;
