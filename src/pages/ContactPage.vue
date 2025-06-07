@@ -285,7 +285,7 @@ const submitForm = () => {
     grid-template-columns: 1fr;
   }
 
-  .decorElement {
+  .contactSideDecor {
     display: none;
   }
 }
