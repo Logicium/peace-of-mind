@@ -2,7 +2,7 @@
 import data from "../data/data.ts";
 import FlowerArt3 from "@/assets/line-art/FlowerArt3.vue";
 import StemArt2 from "@/assets/line-art/StemArt2.vue";
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 
 const firstName = ref('');
 const lastName = ref('');
@@ -13,27 +13,72 @@ const referralSource = ref('');
 
 const services = data.services.map(service => service.name);
 
-const submitForm = () => {
-  // Form submission logic would go here
-  console.log({
-    firstName: firstName.value,
-    lastName: lastName.value,
-    email: email.value,
-    phone: phone.value,
-    interestedService: interestedService.value,
-    referralSource: referralSource.value
-  });
+// Form submission state
+const isSubmitting = ref(false);
+const submitStatus = reactive({
+  success: false,
+  message: '',
+  visible: false
+});
 
-  // Reset form
-  firstName.value = '';
-  lastName.value = '';
-  email.value = '';
-  phone.value = '';
-  interestedService.value = '';
-  referralSource.value = '';
+// Function to show message with timeout
+const showMessage = (message, isSuccess) => {
+  submitStatus.message = message;
+  submitStatus.success = isSuccess;
+  submitStatus.visible = true;
 
-  // Show success message
-  alert('Thank you for your message! We will get back to you soon.');
+  // Hide message after 4 seconds
+  setTimeout(() => {
+    submitStatus.visible = false;
+  }, 4000);
+};
+
+const submitForm = async () => {
+  // Basic validation
+  if (!firstName.value || !lastName.value || !email.value || !phone.value ||
+      !interestedService.value || !referralSource.value) {
+    showMessage('Please fill out all fields', false);
+    return;
+  }
+
+  isSubmitting.value = true;
+
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/email/contact`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        firstName: firstName.value,
+        lastName: lastName.value,
+        email: email.value,
+        phone: phone.value,
+        interestedService: interestedService.value,
+        referralSource: referralSource.value
+      })
+    });
+
+    const result = await response.json();
+
+    showMessage(result.message, result.success);
+
+    if (result.success) {
+      // Reset form on success
+      firstName.value = '';
+      lastName.value = '';
+      email.value = '';
+      phone.value = '';
+      interestedService.value = '';
+      referralSource.value = '';
+    }
+  } catch (error) {
+    showMessage('An error occurred. Please try again later.', false);
+    console.error('Error submitting form:', error);
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 </script>
 
@@ -127,7 +172,13 @@ const submitForm = () => {
             />
           </div>
 
-          <button type="submit" class="submitButton btn oval">SUBMIT</button>
+          <div v-if="submitStatus.visible" class="formMessage" :class="{ 'success': submitStatus.success, 'error': !submitStatus.success }">
+            {{ submitStatus.message }}
+          </div>
+
+          <button type="submit" class="submitButton btn oval" :disabled="isSubmitting">
+            {{ isSubmitting ? 'SENDING...' : 'SUBMIT' }}
+          </button>
         </form>
 
         <div class="contactSideDecor">
@@ -253,6 +304,41 @@ const submitForm = () => {
 .submitButton {
   display: block;
   margin: $paddingLg auto 0;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.formMessage {
+  padding: 10px 15px;
+  border-radius: 24px;
+  margin-bottom: 15px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+
+  &.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  &.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .contactSideDecor {
