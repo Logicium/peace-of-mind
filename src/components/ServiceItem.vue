@@ -33,7 +33,7 @@ const imageUrl = computed(()=> 'url("'+props.image+'")').value;
 }
 
 .serviceName{
-  font-size: calc(12px + 1vw);
+  font-size: $fontBig;
 }
 
 .serviceImg{

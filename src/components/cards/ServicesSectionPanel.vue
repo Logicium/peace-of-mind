@@ -52,9 +52,6 @@ defineProps({
 
 <template>
   <div class="serviceSection" :class="{ altBackground }">
-    <div v-if="hasHeaderSection" class="headerSection">
-      <div class="banner">What I Offer</div>
-    </div>
 
     <div class="serviceHeader">
       <h2 class="serviceTitle">{{ title }}</h2>
@@ -102,17 +99,6 @@ defineProps({
 
 .altBackground {
   background-color: $secondary;
-}
-
-.headerSection {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin-top: 200px;
-  padding: 50px 0 50px;
-  background-color: $secondary;
-  border-radius: 24px;
 }
 
 .serviceHeader {

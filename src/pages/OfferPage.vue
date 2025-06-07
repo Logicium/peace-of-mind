@@ -9,76 +9,78 @@ import ServicesSectionPanel from "@/components/cards/ServicesSectionPanel.vue";
 
 <template>
   <div class="offerPage">
+    <div class="offerSection">
+      <div class="headerSection">
+        <div class="banner">What I Offer</div>
+      </div>
+      <!-- Childbirth Education Section -->
+      <ServicesSectionPanel
+        :title="serviceDetails.childbirth.title"
+        :tagline="serviceDetails.childbirth.tagline"
+        :includes="serviceDetails.childbirth.includes"
+        :price="serviceDetails.childbirth.price"
+        imageUrl="/images/insta/IMG_0185.heic"
+        imageAlt="Childbirth Education"
+      >
+        <template #flowerArt>
+          <RoseArt />
+        </template>
+      </ServicesSectionPanel>
 
+      <!-- Birth Doula Support Section -->
+      <ServicesSectionPanel
+        :title="serviceDetails.doula.title"
+        :tagline="serviceDetails.doula.tagline"
+        :description="serviceDetails.doula.fullDesc"
+        :includes="serviceDetails.doula.includes"
+        :price="serviceDetails.doula.price"
+        :detailsOnRight="false"
+        :altBackground="true"
+        imageUrl="/images/insta/IMG_0379.heic"
+        imageAlt="Birth Doula Support"
+      >
+        <template #flowerArt>
+          <LilyArt />
+        </template>
+      </ServicesSectionPanel>
 
-    <!-- Childbirth Education Section -->
-    <ServicesSectionPanel
-      :title="serviceDetails.childbirth.title"
-      :tagline="serviceDetails.childbirth.tagline"
-      :includes="serviceDetails.childbirth.includes"
-      :price="serviceDetails.childbirth.price"
-      imageUrl="/images/insta/IMG_0185.heic"
-      imageAlt="Childbirth Education"
-      hasHeaderSection
-    >
-      <template #flowerArt>
-        <RoseArt />
-      </template>
-    </ServicesSectionPanel>
+      <!-- Birth Plan Support Section -->
+      <ServicesSectionPanel
+        :title="serviceDetails.birthPlan.title"
+        :tagline="serviceDetails.birthPlan.tagline"
+        :description="serviceDetails.birthPlan.fullDesc"
+        :includes="serviceDetails.birthPlan.includes"
+        :price="serviceDetails.birthPlan.price"
+        imageUrl="/images/insta/IMG_0473.heic"
+        imageAlt="Birth Plan Support"
+      >
+        <template #flowerArt>
+          <CarnationArt />
+        </template>
+      </ServicesSectionPanel>
 
-    <!-- Birth Doula Support Section -->
-    <ServicesSectionPanel
-      :title="serviceDetails.doula.title"
-      :tagline="serviceDetails.doula.tagline"
-      :description="serviceDetails.doula.fullDesc"
-      :includes="serviceDetails.doula.includes"
-      :price="serviceDetails.doula.price"
-      :detailsOnRight="false"
-      :altBackground="true"
-      imageUrl="/images/insta/IMG_0379.heic"
-      imageAlt="Birth Doula Support"
-    >
-      <template #flowerArt>
-        <LilyArt />
-      </template>
-    </ServicesSectionPanel>
+      <!-- Car Seat Safety Section -->
+      <ServicesSectionPanel
+        :title="serviceDetails.carSeat.title"
+        :description="serviceDetails.carSeat.fullDesc"
+        :includes="serviceDetails.carSeat.includes"
+        :price="serviceDetails.carSeat.price"
+        :detailsOnRight="false"
+        :altBackground="true"
+        imageUrl="/images/carseat/seat3.JPEG"
+        imageAlt="Car Seat Safety"
+      >
+        <template #flowerArt>
+          <LotusArt />
+        </template>
+      </ServicesSectionPanel>
 
-    <!-- Birth Plan Support Section -->
-    <ServicesSectionPanel
-      :title="serviceDetails.birthPlan.title"
-      :tagline="serviceDetails.birthPlan.tagline"
-      :description="serviceDetails.birthPlan.fullDesc"
-      :includes="serviceDetails.birthPlan.includes"
-      :price="serviceDetails.birthPlan.price"
-      imageUrl="/images/insta/IMG_0473.heic"
-      imageAlt="Birth Plan Support"
-    >
-      <template #flowerArt>
-        <CarnationArt />
-      </template>
-    </ServicesSectionPanel>
-
-    <!-- Car Seat Safety Section -->
-    <ServicesSectionPanel
-      :title="serviceDetails.carSeat.title"
-      :description="serviceDetails.carSeat.fullDesc"
-      :includes="serviceDetails.carSeat.includes"
-      :price="serviceDetails.carSeat.price"
-      :detailsOnRight="false"
-      :altBackground="true"
-      imageUrl="/images/carseat/seat3.JPEG"
-      imageAlt="Car Seat Safety"
-    >
-      <template #flowerArt>
-        <LotusArt />
-      </template>
-    </ServicesSectionPanel>
-
-    <!-- Sliding Scale Section -->
-    <div class="slidingScaleSection">
-      <div class="slidingScaleContent">
-        <div class="slidingScaleText">{{ serviceDetails.slidingScale }}</div>
-        <RouterLink to="/contact"><div class="btn oval">LET'S CONNECT</div></RouterLink>
+      <!-- Sliding Scale Section -->
+      <div class="slidingScaleSection">
+        <div class="slidingScaleContent">
+          <div class="slidingScaleText">{{ serviceDetails.slidingScale }}</div>
+          <RouterLink to="/contact"><div class="btn oval">LET'S CONNECT</div></RouterLink>
+        </div>
       </div>
     </div>
   </div>
@@ -95,6 +97,14 @@ import ServicesSectionPanel from "@/components/cards/ServicesSectionPanel.vue";
   padding: 0 24px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.offerSection{
+  display: flex;
+  flex-direction: column;
+  margin-top: $paddingMd;
+  position: relative;
+  padding: $paddingLg;
 }
 
 .background{
@@ -158,4 +168,17 @@ import ServicesSectionPanel from "@/components/cards/ServicesSectionPanel.vue";
   margin-top: $paddingMd;
   justify-self: center;
 }
+
+
+.headerSection {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 200px;
+  padding: 50px 0 50px;
+  background-color: $secondary;
+  border-radius: 24px;
+}
+
 </style>

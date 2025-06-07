@@ -44,7 +44,7 @@ const submitForm = () => {
 
       <div class="contactHeader">
         <div class="headerContent">
-          <div class="banner">Contact Me</div>
+          <div class="banner">Let's Connect</div>
           <div class="contactText">
             I'd love to hear from you! Please fill out the form below and I'll get back to you as soon as possible.
           </div>
@@ -159,6 +159,7 @@ const submitForm = () => {
 .contactSection {
   position: relative;
   padding: $paddingLg;
+  margin-top: $paddingMd;
   border-radius: 24px;
   background-color: $background;
 }

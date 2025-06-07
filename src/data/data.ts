@@ -19,7 +19,7 @@ const data = {
   services:[
     {
       name:'Birth Plan Support',
-      image:'/images/pregnancy/pregnancy1.jpg',
+      image:'/images/insta/IMG_0473.heic',
       desc: 'Personalized support in creating your birth plan, understanding your options, and communicating effectively with your birth team. Ideal for first-time parents seeking clarity and confidence.'
     },
     {
@@ -29,7 +29,7 @@ const data = {
     },
     {
       name:'Birth Doula Support',
-      image:'/images/pregnancy/pregnancy2.jpg',
+      image:'/images/insta/IMG_0442.jpg',
       desc:'Compassionate, grounded support through pregnancy and labor, centered on your choices, intuition, and vision for birth.'
     },
     {
@@ -120,10 +120,10 @@ const data = {
       image: "/images/insta/IMG_0355.heic",
       alt: "Instagram post 6"
     },
-    // {
-    //   image: "/images/insta/IMG_0376.heic",
-    //   alt: "Instagram post 7"
-    // },
+    {
+      image: "/images/insta/IMG_0376.jpg",
+      alt: "Instagram post 7"
+    },
     // {
     //   image: "/images/insta/IMG_0442.heic",
     //   alt: "Instagram post 8"

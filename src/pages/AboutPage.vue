@@ -94,6 +94,7 @@ import FlowerCard from "@/components/cards/FlowerCard.vue";
   justify-content: center;
   position: relative;
   z-index: 1;
+  margin-top: $paddingXl;
 }
 
 .aboutText {
