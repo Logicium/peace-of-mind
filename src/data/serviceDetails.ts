@@ -12,7 +12,7 @@ const serviceDetails = reactive({
       "Education on stages of labor, comfort measures, interventions, and newborn care",
       "Evidence-based information to help you make informed decisions",
     ],
-    price: "<u><b>Investment in your Peace of Mind:</b></u> $90"
+    priceValue: "$90"
   },
   childbirth: {
     title: "Comprehensive Childbirth Education",
@@ -25,7 +25,7 @@ const serviceDetails = reactive({
       "Referrals to trusted local and national resources like lactation consultants, pelvic floor therapists, and mental health providers",
       "Ongoing support between sessions via email or text for questions or encouragement"
     ],
-    price: "<u><b>Investment in your Peace of Mind:</b></u> $150 - $250 (sliding scale available)"
+    priceValue: "$150 - $250 (sliding scale available)"
   },
   doula: {
     title: "Birth Doula Support",
@@ -40,7 +40,7 @@ const serviceDetails = reactive({
       "Evidence-based guidance rooted in reproductive and birth justice",
       "Phone/text/email support throughout your pregnancy for reassurance and questions"
     ],
-    price: "<u><b>Investment in your Peace of Mind:</b></u> $900-$1,200 (certification prices, sliding scale, payment plans available)"
+    priceValue: "$900-$1,200 (certification prices, sliding scale, payment plans available)"
   },
   carSeat: {
     title: "Car Seat Safety Check",
@@ -52,7 +52,7 @@ const serviceDetails = reactive({
       "Education on current safety guidelines, recalls, and next-stage planning",
       "Confidence in knowing you can re-install your seat on your own"
     ],
-    price: "<u><b>Investment in your Peace of Mind:</b></u> Suggested Donation $50"
+    priceValue: "Suggested Donation $50"
   },
   slidingScale: "I believe everyone deserves access to respectful, empowering care regardless of income. All services are offered on a sliding scale, and I'm happy to discuss a payment plan. Let's find a way to work together that feels right for both of us."
 })

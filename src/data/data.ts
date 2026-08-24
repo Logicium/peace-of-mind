@@ -201,7 +201,15 @@ const data = reactive({
       ctaSub: "Whether you're newly expecting or nearly there, I'd love to hear your story.",
     },
 
-    offer: { headA: 'What I', headEm: 'offer', book: 'Reach out' },
+    offer: {
+      headA: 'What I',
+      headEm: 'offer',
+      book: 'Reach out',
+      /* one label above four different amounts: four keys holding the same
+         words would collapse to one binding and the other three would go
+         stale the moment it was edited */
+      priceLabel: 'Investment in your Peace of Mind:',
+    },
 
     services: { seeDetails: 'See details' },
 

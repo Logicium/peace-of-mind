@@ -3,6 +3,20 @@ import { computed } from 'vue'
 import data from '@/data/data'
 
 const copy = data.copy
+
+/*
+ * One chapter title ("Birth Doula Support") is word for word a service name
+ * on the home index. The editor maps a rendered string to the FIRST config
+ * key holding it, so both elements bind to the index key: an edit here would
+ * save there, and this page, which renders its own copy of the words, would
+ * show the old ones again on reload.
+ *
+ * Rendering the index entry whenever the two already agree makes them one
+ * key. Nothing on screen changes; the words simply come from the key the
+ * edit actually lands on.
+ */
+const chapterTitle = (title: string): string =>
+  data.services.find((s) => s.name === title)?.name ?? title
 import serviceDetails from '@/data/serviceDetails'
 import FloraField from '@/components/FloraField.vue'
 import type { FloraItem } from '@/components/FloraField.vue'
@@ -114,8 +128,16 @@ const chapterFlora = (art: FloraItem['art'], accent: string): FloraItem[] => [
           <div class="chapter__side">
             <div class="chapter__sideInner">
               <p class="chapter__num fr" v-reveal>{{ String(i + 1).padStart(2, '0') }}</p>
-              <h2 class="display d-lg chapter__title" v-reveal:up="0.08">{{ ch.detail.title }}</h2>
-              <div class="chapter__price" v-reveal:up="0.16" v-html="ch.detail.price" />
+              <h2 class="display d-lg chapter__title" v-reveal:up="0.08">
+                {{ chapterTitle(ch.detail.title) }}
+              </h2>
+              <!--
+                Markup, not an HTML string: the editor matches plain text, so
+                a price that ships its own <u><b> tags can never be edited.
+              -->
+              <div class="chapter__price" v-reveal:up="0.16">
+                <u><b>{{ copy.offer.priceLabel }}</b></u> <span>{{ ch.detail.priceValue }}</span>
+              </div>
               <RouterLink to="/contact" class="pill chapter__book" v-reveal:up="0.22">
                 {{ copy.offer.book }}
               </RouterLink>
