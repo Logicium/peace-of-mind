@@ -1,13 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from "@/pages/HomePage.vue";
-import AboutPage from "@/pages/AboutPage.vue";
-import ContactPage from "@/pages/ContactPage.vue";
-import OfferPage from "@/pages/OfferPage.vue";
+
+const AboutPage = () => import("@/pages/AboutPage.vue");
+const ContactPage = () => import("@/pages/ContactPage.vue");
+const OfferPage = () => import("@/pages/OfferPage.vue");
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(to) {
+    if (to.hash) {
+      // wait out the page transition so the anchor exists before we scroll
+      return new Promise((resolve) => {
+        setTimeout(() => resolve({ el: to.hash, top: 88, behavior: 'smooth' }), 620);
+      });
+    }
     return { top: 0 };
   },
   routes: [

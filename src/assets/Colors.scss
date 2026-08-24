@@ -1,6 +1,31 @@
-$primary: #6F56A2;
-$secondary: #F7CFD8;
-$tertiary: #C7EEDA;
-$quat: #daa2ad;
-$background: #FAF1E6;
-$bg2: #fae5cb;
+// ── Peace of Mind · palette ────────────────────────────────────────────
+// Porcelain paper, deep plum ink, bright iris + rose pops, soft botanical
+// tints. Derived from the lotus logo (iris / pink / mint) but pushed from
+// pastel toward editorial.
+
+$ink:      #2B1F3D;   // deep plum, primary text
+$ink-soft: #55476E;   // secondary text
+$paper:    #FBF7F0;   // warm porcelain ground
+$cream:    #FFFDF8;   // raised surfaces
+
+// bright pops
+$iris:     #6A4AE3;
+$rose:     #E0407F;
+$meadow:   #2E9A6B;
+$amber:    #E8862D;
+
+// botanical tints (washes, bands, chips)
+$lilac:    #E9E1FA;
+$blush:    #F9DFE9;
+$mint:     #DDF1E5;
+$butter:   #FAECD4;
+
+$hairline: rgba(43, 31, 61, 0.14);
+
+// ── legacy aliases (old components / anything not yet migrated) ────────
+$primary: $ink;
+$secondary: $blush;
+$tertiary: $mint;
+$quat: $rose;
+$background: $paper;
+$bg2: $butter;

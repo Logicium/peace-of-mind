@@ -1,4 +1,12 @@
-const data = {
+import { reactive } from 'vue';
+
+/*
+ * Reactive so a published edit from the Apotome studio reaches the pages
+ * that already import this object. Every page and component reads its copy
+ * from here, so making the source reactive is the whole integration: no
+ * component had to change.
+ */
+const data = reactive({
   about:{
     tagline:"You deserve Peace of Mind throughout your pregnancy, birth, & beyond.",
     intro:"Peace of Mind Birth Education LLC was born out of a strong desire to provide high-quality, evidence-based childbirth education to all women and birthing people. Guided by the principles of reproductive and birth justice, my mission is to support families through childbirth education rooted in self-advocacy, equipping them with the knowledge and confidence to navigate pregnancy, labor, and birth.",
@@ -128,7 +136,99 @@ const data = {
     //   image: "/images/insta/IMG_0442.heic",
     //   alt: "Instagram post 8"
     // }
-  ]
-}
+  ],
+  /*
+   * The chrome the redesign wrote straight into its templates: nav, footer,
+   * section headings, form labels, button words.
+   *
+   * It lives here for one reason: the editor kit matches a rendered text node
+   * against a string in this tree, so copy that exists only in a template is
+   * copy nobody can ever edit. Everything a visitor reads now has a key.
+   *
+   * Two rules govern the shape, both forced by how matching works:
+   *
+   * 1. A string appearing in more than one place gets ONE key, shared.
+   *    Matching is by value and the first path wins, so two keys both holding
+   *    "Contact" would bind both elements to the first key: an edit would
+   *    write to one and render from the other, and appear to revert.
+   *
+   * 2. A heading with an italic fragment is split into its parts, because the
+   *    kit binds the element that WHOLLY contains the text. Binding "My
+   *    mission" to the <h2> would make the heading one plain-text field and
+   *    flatten the <em> inside it on the first edit.
+   */
+  copy: {
+    /* one brand name, rendered by the nav, the footer and both wordmarks */
+    brand: { wordA: 'Peace', wordOf: 'of', wordB: 'Mind', suffix: 'Birth Education' },
+
+    nav: {
+      home: 'Home',
+      about: 'About',
+      offer: 'What I Offer',
+      contact: 'Contact',
+      cta: "Let's connect",
+      tagline: 'Childbirth education, doula support & car seat safety',
+    },
+
+    /* said on the home page and again at the top of About */
+    shared: { hiA: "Hi, I'm", hiEm: 'Kisori.' },
+
+    home: {
+      heroCta: 'Explore services',
+      heroLink: 'Meet Kisori',
+      servicesA: 'How I can',
+      servicesEm: 'support',
+      servicesB: 'you',
+      meetBtn: 'More about me',
+      evidenceA: 'Backed by',
+      evidenceEm: 'evidence,',
+      evidenceB: 'not opinion',
+      voicesA: 'What families',
+      voicesEm: 'are saying',
+      galleryA: 'Moments',
+      galleryEm: 'from the journey',
+      ctaHeading: 'Ready when you are.',
+      ctaSub:
+        "Every journey starts with a conversation. Tell me where you are and what you need, and we'll take it from there.",
+    },
+
+    about: {
+      missionA: 'My',
+      missionEm: 'mission',
+      certsHeading: 'Certifications',
+      membershipsHeading: 'Memberships',
+      ctaHeading: "Let's meet each other.",
+      ctaSub: "Whether you're newly expecting or nearly there, I'd love to hear your story.",
+    },
+
+    offer: { headA: 'What I', headEm: 'offer', book: 'Reach out' },
+
+    services: { seeDetails: 'See details' },
+
+    contact: {
+      titleA: "Let's",
+      titleEm: 'connect.',
+      blurb:
+        "I'd love to hear from you. Share a little about where you are in your journey and I'll get back to you as soon as I can.",
+      facts: ['Denver metro area', 'In-person, virtual & hybrid', 'Sliding scale available'],
+      labelFirst: 'First name',
+      labelLast: 'Last name',
+      labelEmail: 'Email',
+      labelPhone: 'Phone number',
+      labelService: 'Which services are you interested in?',
+      servicePlaceholder: 'Select a service',
+      labelReferral: 'How did you hear about me?',
+      submit: 'Send message',
+      submitting: 'Sending…',
+    },
+
+    footer: {
+      instagram: 'Instagram',
+      facebook: 'Facebook',
+      legalName: 'Peace of Mind Birth Education LLC',
+      place: 'Denver, Colorado',
+    },
+  },
+})
 
 export default data;

@@ -1,5 +1,8 @@
 // Detailed service information
-const serviceDetails = {
+import { reactive } from 'vue';
+
+/* reactive for the same reason as data.ts: OfferPage reads straight from it */
+const serviceDetails = reactive({
   birthPlan: {
     title: "Comprehensive Birth Plan Support",
     fullDesc: "I’ll guide you through creating a personalized birth plan while providing tailored education on each part of the birth experience. Great for those who want to understand their options and clearly communicate their preferences to their birth team. ",
@@ -52,6 +55,6 @@ const serviceDetails = {
     price: "<u><b>Investment in your Peace of Mind:</b></u> Suggested Donation $50"
   },
   slidingScale: "I believe everyone deserves access to respectful, empowering care regardless of income. All services are offered on a sliding scale, and I'm happy to discuss a payment plan. Let's find a way to work together that feels right for both of us."
-};
+})
 
 export default serviceDetails;

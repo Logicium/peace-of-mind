@@ -1,184 +1,335 @@
 <script setup lang="ts">
-import serviceDetails from "../data/serviceDetails.ts";
-import RoseArt from "@/assets/line-art/RoseArt.vue";
-import LilyArt from "@/assets/line-art/LilyArt.vue";
-import LotusArt from "@/assets/line-art/LotusArt.vue";
-import CarnationArt from "@/assets/line-art/CarnationArt.vue";
-import ServicesSectionPanel from "@/components/cards/ServicesSectionPanel.vue";
+import { computed } from 'vue'
+import data from '@/data/data'
+
+const copy = data.copy
+import serviceDetails from '@/data/serviceDetails'
+import FloraField from '@/components/FloraField.vue'
+import type { FloraItem } from '@/components/FloraField.vue'
+
+const chips = computed(() =>
+  data.about.subtitle.split('|').map((s) => s.trim()).filter(Boolean),
+)
+
+/* one chapter per service, styled by its own accent family */
+const chapters = computed(() => {
+  const d = serviceDetails
+  return [
+    {
+      id: 'childbirth',
+      detail: d.childbirth,
+      image: '/images/insta/IMG_0185.heic',
+      alt: 'Childbirth education session',
+      accent: 'var(--iris)',
+      tint: 'var(--lilac)',
+      art: 'rose' as const,
+    },
+    {
+      id: 'doula',
+      detail: d.doula,
+      image: '/images/insta/IMG_0379.heic',
+      alt: 'Doula supporting a birthing parent',
+      accent: 'var(--rose)',
+      tint: 'var(--blush)',
+      art: 'lily' as const,
+    },
+    {
+      id: 'birth-plan',
+      detail: d.birthPlan,
+      image: '/images/insta/IMG_0473.heic',
+      alt: 'Birth plan conversation',
+      accent: 'var(--meadow)',
+      tint: 'var(--mint)',
+      art: 'carnation' as const,
+    },
+    {
+      id: 'car-seat',
+      detail: d.carSeat,
+      image: '/images/carseat/seat3.JPEG',
+      alt: 'Certified car seat safety check',
+      accent: 'var(--amber)',
+      tint: 'var(--butter)',
+      art: 'lotus' as const,
+    },
+  ]
+})
+
+const taglines = (t: string | string[] | undefined) =>
+  !t ? [] : Array.isArray(t) ? t : [t]
+
+/* each chapter gets one huge signature bloom bleeding off the band's corner,
+   plus a small counterweight sprig low on the other side */
+const chapterFlora = (art: FloraItem['art'], accent: string): FloraItem[] => [
+  {
+    art,
+    at: { top: '-14%', right: '-16%' },
+    size: 'clamp(360px, 48vw, 860px)',
+    tint: accent,
+    opacity: 0.2,
+    speed: 0.06,
+    rotate: 4,
+    baseRotate: 14,
+    mouse: 0.012,
+  },
+  {
+    art: 'stem3',
+    at: { bottom: '-6%', left: '-4%' },
+    size: 'clamp(150px, 17vw, 300px)',
+    tint: accent,
+    opacity: 0.24,
+    speed: 0.12,
+    rotate: -6,
+    baseRotate: -18,
+  },
+]
 </script>
 
 <template>
-  <div class="offerPage">
-    <div class="offerSection">
-      <div class="headerSection">
-        <div class="banner">What I Offer</div>
+  <main class="offer">
+    <!-- ── header ───────────────────────────────────────────────────── -->
+    <section class="head wrap">
+      <h1 class="display head__title">
+        <span v-reveal:up="0.05">{{ copy.offer.headA }}</span>
+        <span class="head__accent" v-reveal:up="0.16"><em>{{ copy.offer.headEm }}</em></span>
+      </h1>
+      <div class="head__chips" v-reveal:up="0.3">
+        <span v-for="(chip, i) in chips" :key="i" class="head__chip">
+          <span class="dot" :style="{ '--accent': ['var(--iris)', 'var(--rose)', 'var(--meadow)'][i % 3] }" />
+          {{ chip }}
+        </span>
       </div>
-      <!-- Childbirth Education Section -->
-      <ServicesSectionPanel
-        :title="serviceDetails.childbirth.title"
-        :tagline="serviceDetails.childbirth.tagline"
-        :includes="serviceDetails.childbirth.includes"
-        :price="serviceDetails.childbirth.price"
-        imageUrl="/images/insta/IMG_0185.heic"
-        imageAlt="Childbirth Education"
-      >
-        <template #flowerArt>
-          <RoseArt />
-        </template>
-      </ServicesSectionPanel>
+    </section>
 
-      <!-- Birth Doula Support Section -->
-      <ServicesSectionPanel
-        :title="serviceDetails.doula.title"
-        :tagline="serviceDetails.doula.tagline"
-        :description="serviceDetails.doula.fullDesc"
-        :includes="serviceDetails.doula.includes"
-        :price="serviceDetails.doula.price"
-        :detailsOnRight="false"
-        :altBackground="true"
-        imageUrl="/images/insta/IMG_0379.heic"
-        imageAlt="Birth Doula Support"
-      >
-        <template #flowerArt>
-          <LilyArt />
-        </template>
-      </ServicesSectionPanel>
+    <!-- ── chapters ─────────────────────────────────────────────────── -->
+    <section
+      v-for="(ch, i) in chapters"
+      :id="ch.id"
+      :key="ch.id"
+      class="chapter"
+      :style="{ '--accent': ch.accent, '--tint': ch.tint }"
+    >
+      <div class="chapter__band">
+        <FloraField :items="chapterFlora(ch.art, ch.accent)" />
+        <div class="wrap chapter__grid">
+          <div class="chapter__side">
+            <div class="chapter__sideInner">
+              <p class="chapter__num fr" v-reveal>{{ String(i + 1).padStart(2, '0') }}</p>
+              <h2 class="display d-lg chapter__title" v-reveal:up="0.08">{{ ch.detail.title }}</h2>
+              <div class="chapter__price" v-reveal:up="0.16" v-html="ch.detail.price" />
+              <RouterLink to="/contact" class="pill chapter__book" v-reveal:up="0.22">
+                {{ copy.offer.book }}
+              </RouterLink>
+            </div>
+          </div>
 
-      <!-- Birth Plan Support Section -->
-      <ServicesSectionPanel
-        :title="serviceDetails.birthPlan.title"
-        :tagline="serviceDetails.birthPlan.tagline"
-        :description="serviceDetails.birthPlan.fullDesc"
-        :includes="serviceDetails.birthPlan.includes"
-        :price="serviceDetails.birthPlan.price"
-        imageUrl="/images/insta/IMG_0473.heic"
-        imageAlt="Birth Plan Support"
-      >
-        <template #flowerArt>
-          <CarnationArt />
-        </template>
-      </ServicesSectionPanel>
+          <div class="chapter__main">
+            <div class="chapter__photo mask-arch" v-grow v-reveal:mask>
+              <img :src="ch.image" :alt="ch.alt" loading="lazy" />
+            </div>
 
-      <!-- Car Seat Safety Section -->
-      <ServicesSectionPanel
-        :title="serviceDetails.carSeat.title"
-        :description="serviceDetails.carSeat.fullDesc"
-        :includes="serviceDetails.carSeat.includes"
-        :price="serviceDetails.carSeat.price"
-        :detailsOnRight="false"
-        :altBackground="true"
-        imageUrl="/images/carseat/seat3.JPEG"
-        imageAlt="Car Seat Safety"
-      >
-        <template #flowerArt>
-          <LotusArt />
-        </template>
-      </ServicesSectionPanel>
+            <p
+              v-for="(t, j) in taglines('tagline' in ch.detail ? ch.detail.tagline : undefined)"
+              :key="j"
+              class="display d-md chapter__tagline"
+              v-reveal:up="0.05 + j * 0.06"
+            >
+              <em>{{ t }}</em>
+            </p>
 
-      <!-- Sliding Scale Section -->
-      <div class="slidingScaleSection">
-        <div class="slidingScaleContent">
-          <div class="slidingScaleText">{{ serviceDetails.slidingScale }}</div>
-          <RouterLink to="/contact"><div class="btn oval">LET'S CONNECT</div></RouterLink>
+            <p v-if="'fullDesc' in ch.detail && ch.detail.fullDesc" class="lead chapter__desc" v-reveal>
+              {{ ch.detail.fullDesc }}
+            </p>
+
+            <ul class="chapter__list">
+              <li v-for="(inc, j) in ch.detail.includes" :key="j" v-reveal:up="j * 0.05">
+                <span class="dot" />{{ inc }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <!-- ── sliding scale ────────────────────────────────────────────── -->
+    <section class="scale">
+      <div class="wrap">
+        <div class="scale__panel mesh" v-reveal:scale>
+          <p class="display d-md scale__text"><em>{{ serviceDetails.slidingScale }}</em></p>
+          <RouterLink to="/contact" class="pill pill--iris scale__btn">{{ copy.nav.cta }}</RouterLink>
+        </div>
+      </div>
+    </section>
+  </main>
 </template>
 
 <style scoped lang="scss">
-@import "../assets/Text";
-@import "../assets/Colors";
+@import "../assets/Colors.scss";
+@import "../assets/Text.scss";
 
-.offerPage {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 200px);
-  padding: 0 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+// ── header ─────────────────────────────────────────────────────────────
+.head {
+  padding-top: calc(4.75rem + clamp(2.5rem, 7vw, 6rem));
+  padding-bottom: clamp(2.5rem, 6vw, 5rem);
 }
 
-.offerSection{
+.head__title {
+  font-size: clamp(3.6rem, 10vw, 9rem);
+  line-height: 0.98;
+
+  span { display: block; }
+}
+
+.head__accent {
+  padding-left: clamp(1.5rem, 6vw, 6rem);
+  color: $iris;
+}
+
+.head__chips {
   display: flex;
-  flex-direction: column;
-  margin-top: $paddingMd;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: clamp(1.8rem, 3.5vw, 2.8rem);
+}
+
+.head__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.25rem;
+  border: 1px solid $hairline;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 400;
+  background: $cream;
+}
+
+// ── chapters ───────────────────────────────────────────────────────────
+.chapter {
+  padding-block: clamp(0.6rem, 1.5vw, 1.2rem);
+  scroll-margin-top: 5.5rem;
+}
+
+.chapter__band {
   position: relative;
-  padding: $paddingLg;
+  background: var(--tint);
+  border-radius: clamp(36px, 6vw, 72px);
+  margin-inline: clamp(0.6rem, 1.5vw, 1.4rem);
+  overflow: clip;
+  padding-block: clamp(3.5rem, 7vw, 6.5rem);
 }
 
-.background{
-  position: absolute;
-  background-color: $background;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+.chapter__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: clamp(2.5rem, 6vw, 7rem);
+  align-items: start;
+
+  @media (max-width: 860px) { grid-template-columns: 1fr; }
 }
 
-.decorElement {
-  position: absolute;
-  width: 250px;
-  height: 250px;
-  right: 5%;
-  top: 20%;
-  color: $primary;
+.chapter__sideInner {
+  position: sticky;
+  top: 6.5rem;
+
+  @media (max-width: 860px) { position: static; }
 }
 
-.decorElement2 {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  bottom: 10%;
-  right: 10%;
-  color: $primary;
+.chapter__num {
+  font-style: italic;
+  font-size: clamp(1.3rem, 2vw, 1.7rem);
+  color: var(--accent);
 }
 
-.slidingScaleSection {
-  margin: $paddingLg 0;
-  padding: $paddingLg;
-  background-color: #d0baf7;
+.chapter__title { margin-top: 0.8rem; }
+
+.chapter__price {
+  margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  padding: 1.3rem 1.6rem;
+  background: rgba(255, 253, 248, 0.72);
   border-radius: 24px;
-  position: relative;
+  max-width: 26rem;
+  line-height: 1.5;
+  font-weight: 300;
+
+  :deep(u) {
+    display: block;
+    text-decoration: none;
+    font-size: $tiny;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.35rem;
+
+    b { font-weight: 600; }
+  }
 }
 
-.slidingScaleContent {
-  position: relative;
-  max-width: 80%;
-  margin: 0 auto;
+.chapter__book { margin-top: 1.6rem; }
+
+.chapter__photo {
+  aspect-ratio: 4 / 3.4;
+  max-height: 460px;
+  width: 100%;
+
+  img { width: 100%; height: 100%; object-fit: cover; }
 }
 
-.slidingScaleText {
-  font-size: $fontNormal;
-  line-height: 1.6;
+.chapter__tagline {
+  margin-top: clamp(1.8rem, 3.5vw, 2.6rem);
+  max-width: 24em;
+}
+
+.chapter__desc {
+  margin-top: 1.4rem;
+  max-width: 58ch;
+}
+
+.chapter__list {
+  list-style: none;
+  margin: clamp(1.8rem, 3vw, 2.4rem) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+
+  li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding-block: 0.95rem;
+    border-bottom: 1px solid rgba(43, 31, 61, 0.1);
+    font-weight: 300;
+    line-height: 1.55;
+
+    &:last-child { border-bottom: none; }
+  }
+}
+
+// ── sliding scale ──────────────────────────────────────────────────────
+.scale { padding-block: clamp(2rem, 5vw, 4rem) $section; }
+
+// pearl mesh: light porcelain field with vivid blurred pops, ink text
+.scale__panel {
+  position: relative;
+  background-color: #f7f1e8;
+  color: $ink;
+  --mesh:
+    radial-gradient(44% 54% at 18% 22%, rgba(106, 74, 227, 0.4) 0%, rgba(106, 74, 227, 0) 70%),
+    radial-gradient(46% 56% at 84% 18%, rgba(224, 64, 127, 0.42) 0%, rgba(224, 64, 127, 0) 70%),
+    radial-gradient(50% 58% at 74% 94%, rgba(64, 205, 158, 0.35) 0%, rgba(64, 205, 158, 0) 72%),
+    radial-gradient(36% 44% at 24% 90%, rgba(255, 190, 120, 0.55) 0%, rgba(255, 190, 120, 0) 72%),
+    linear-gradient(135deg, #fbf7f0 0%, #f2e9db 100%);
+  border-radius: clamp(36px, 6vw, 72px);
+  padding: clamp(3.5rem, 8vw, 7rem) clamp(1.8rem, 6vw, 6rem);
   text-align: center;
 }
 
-@media (max-width: 768px) {
-  .slidingScaleContent {
-    max-width: 100%;
-  }
-
-  .decorElement, .decorElement2 {
-    display: none;
-  }
+.scale__text {
+  max-width: 34em;
+  margin-inline: auto;
+  line-height: 1.45;
 }
 
-.btn{
-  margin-top: $paddingMd;
-  justify-self: center;
-}
-
-
-.headerSection {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin-top: 200px;
-  padding: 50px 0 50px;
-  background-color: $secondary;
-  border-radius: 24px;
-}
-
+.scale__btn { margin-top: 2.4rem; }
 </style>

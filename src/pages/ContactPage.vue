@@ -1,378 +1,325 @@
 <script setup lang="ts">
-import data from "../data/data.ts";
-import FlowerArt3 from "@/assets/line-art/FlowerArt3.vue";
-import StemArt2 from "@/assets/line-art/StemArt2.vue";
-import { ref, reactive } from 'vue';
+import { createApotomeForm } from '@/kit/forms'
+import data from '@/data/data'
 
-const firstName = ref('');
-const lastName = ref('');
-const email = ref('');
-const phone = ref('');
-const interestedService = ref('');
-const referralSource = ref('');
+const copy = data.copy
+/* the dot colours cycle with the facts, so a fourth fact still gets one */
+const factAccents = ['var(--iris)', 'var(--rose)', 'var(--meadow)']
+import FloraField from '@/components/FloraField.vue'
+import type { FloraItem } from '@/components/FloraField.vue'
+import { ref, reactive } from 'vue'
 
-const services = data.services.map(service => service.name);
+const firstName = ref('')
+const lastName = ref('')
+const email = ref('')
+const phone = ref('')
+const interestedService = ref('')
+const referralSource = ref('')
 
-// Form submission state
-const isSubmitting = ref(false);
+const services = data.services.map((service) => service.name)
+
+const isSubmitting = ref(false)
 const submitStatus = reactive({
   success: false,
   message: '',
-  visible: false
-});
+  visible: false,
+})
 
-// Function to show message with timeout
-const showMessage = (message:any, isSuccess:any) => {
-  submitStatus.message = message;
-  submitStatus.success = isSuccess;
-  submitStatus.visible = true;
+const showMessage = (message: string, isSuccess: boolean) => {
+  submitStatus.message = message
+  submitStatus.success = isSuccess
+  submitStatus.visible = true
 
-  // Hide message after 4 seconds
   setTimeout(() => {
-    submitStatus.visible = false;
-  }, 4000);
-};
+    submitStatus.visible = false
+  }, 4000)
+}
+
+/*
+ * Contact runs through the Apotome Labs add-on service. The field names are
+ * unchanged on purpose, so the service keeps receiving exactly what it did
+ * before the redesign.
+ */
+const contactForm = createApotomeForm({ form: 'contact' })
+
+/* the decoy field; a real visitor never sees it, so it must stay empty */
+const honeypot = ref('')
 
 const submitForm = async () => {
-  // Basic validation
-  if (!firstName.value || !lastName.value || !email.value || !phone.value ||
-      !interestedService.value || !referralSource.value) {
-    showMessage('Please fill out all fields', false);
-    return;
+  if (
+    !firstName.value || !lastName.value || !email.value || !phone.value ||
+    !interestedService.value || !referralSource.value
+  ) {
+    showMessage('Please fill out all fields', false)
+    return
   }
 
-  isSubmitting.value = true;
+  isSubmitting.value = true
 
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    const response = await fetch(`${apiUrl}/email/contact`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        firstName: firstName.value,
-        lastName: lastName.value,
-        email: email.value,
-        phone: phone.value,
-        interestedService: interestedService.value,
-        referralSource: referralSource.value
-      })
-    });
+    const result = await contactForm.submit({
+      firstName: firstName.value,
+      lastName: lastName.value,
+      email: email.value,
+      phone: phone.value,
+      interestedService: interestedService.value,
+      referralSource: referralSource.value,
+      [contactForm.honeypotField]: honeypot.value,
+    })
 
-    const result = await response.json();
-
-    showMessage(result.message, result.success);
-
-    if (result.success) {
-      // Reset form on success
-      firstName.value = '';
-      lastName.value = '';
-      email.value = '';
-      phone.value = '';
-      interestedService.value = '';
-      referralSource.value = '';
+    if (result.ok) {
+      showMessage(result.data.message, true)
+      firstName.value = ''
+      lastName.value = ''
+      email.value = ''
+      phone.value = ''
+      interestedService.value = ''
+      referralSource.value = ''
+    } else {
+      showMessage(result.error, false)
     }
-  } catch (error) {
-    showMessage('An error occurred. Please try again later.', false);
-    console.error('Error submitting form:', error);
   } finally {
-    isSubmitting.value = false;
+    isSubmitting.value = false
   }
-};
+}
+
+const flora: FloraItem[] = [
+  { art: 'poppy', at: { top: '10%', left: '-6%' }, size: 'clamp(160px, 18vw, 300px)', tint: 'var(--blush)', opacity: 0.95, blur: 1, speed: 0.07, rotate: 5, baseRotate: -12, mouse: 0.02 },
+  { art: 'sakura', at: { bottom: '12%', left: '10%' }, size: 'clamp(90px, 10vw, 160px)', tint: 'var(--iris)', opacity: 0.85, speed: 0.16, rotate: -8, baseRotate: 22, mouse: 0.04 },
+  { art: 'stem2', at: { top: '46%', left: '30%' }, size: 'clamp(70px, 8vw, 130px)', tint: 'var(--meadow)', opacity: 0.75, speed: 0.11, baseRotate: -18 },
+]
 </script>
 
 <template>
-  <div class="contactPage">
+  <main class="contact">
+    <FloraField :items="flora" />
 
-    <div class="contactSection">
-
-      <div class="contactHeader">
-        <div class="headerContent">
-          <div class="banner">Let's Connect</div>
-          <div class="contactText">
-            I'd love to hear from you! Please fill out the form below and I'll get back to you as soon as possible.
-          </div>
-        </div>
+    <div class="wrap contact__grid">
+      <div class="contact__intro">
+        <h1 class="display contact__title">
+          <span v-reveal:up="0.05">{{ copy.contact.titleA }}</span>
+          <span class="contact__accent" v-reveal:up="0.16"><em>{{ copy.contact.titleEm }}</em></span>
+        </h1>
+        <p class="lead contact__blurb" v-reveal:up="0.3">{{ copy.contact.blurb }}</p>
+        <ul class="contact__facts" v-reveal:up="0.4">
+          <li v-for="(fact, i) in copy.contact.facts" :key="i">
+            <span class="dot" :style="{ '--accent': factAccents[i % factAccents.length] }" />
+            <span>{{ fact }}</span>
+          </li>
+        </ul>
       </div>
 
-      <div class="contactFormContainer">
-        <form @submit.prevent="submitForm" class="contactForm">
-          <div class="formRow">
-            <div class="formGroup">
-              <label for="firstName" class="formLabel">First Name</label>
-              <input
-                type="text"
-                id="firstName"
-                v-model="firstName"
-                class="formInput"
-                required
-              />
+      <div class="contact__formWrap" v-reveal:up="0.2">
+        <form @submit.prevent="submitForm" class="form">
+          <div class="form__row">
+            <div class="form__group">
+              <label for="firstName" class="form__label">{{ copy.contact.labelFirst }}</label>
+              <input type="text" id="firstName" v-model="firstName" class="form__input" required autocomplete="given-name" />
             </div>
-
-            <div class="formGroup">
-              <label for="lastName" class="formLabel">Last Name</label>
-              <input
-                type="text"
-                id="lastName"
-                v-model="lastName"
-                class="formInput"
-                required
-              />
+            <div class="form__group">
+              <label for="lastName" class="form__label">{{ copy.contact.labelLast }}</label>
+              <input type="text" id="lastName" v-model="lastName" class="form__input" required autocomplete="family-name" />
             </div>
           </div>
 
-          <div class="formRow">
-            <div class="formGroup">
-              <label for="email" class="formLabel">Email</label>
-              <input
-                type="email"
-                id="email"
-                v-model="email"
-                class="formInput"
-                required
-              />
+          <div class="form__row">
+            <div class="form__group">
+              <label for="email" class="form__label">{{ copy.contact.labelEmail }}</label>
+              <input type="email" id="email" v-model="email" class="form__input" required autocomplete="email" />
             </div>
-
-            <div class="formGroup">
-              <label for="phone" class="formLabel">Phone Number</label>
-              <input
-                type="tel"
-                id="phone"
-                v-model="phone"
-                class="formInput"
-                required
-              />
+            <div class="form__group">
+              <label for="phone" class="form__label">{{ copy.contact.labelPhone }}</label>
+              <input type="tel" id="phone" v-model="phone" class="form__input" required autocomplete="tel" />
             </div>
           </div>
 
-          <div class="formGroup">
-            <label for="service" class="formLabel">Which services are you interested in?</label>
-            <select
-              id="service"
-              v-model="interestedService"
-              class="formSelect"
-              required
-            >
-              <option value="" disabled selected>Select a service</option>
+          <div class="form__group">
+            <label for="service" class="form__label">{{ copy.contact.labelService }}</label>
+            <select id="service" v-model="interestedService" class="form__input form__select" required>
+              <option value="" disabled selected>{{ copy.contact.servicePlaceholder }}</option>
               <option v-for="service in services" :key="service" :value="service">
                 {{ service }}
               </option>
             </select>
           </div>
 
-          <div class="formGroup">
-            <label for="referral" class="formLabel">How did you hear about me?</label>
+          <div class="form__group">
+            <label for="referral" class="form__label">{{ copy.contact.labelReferral }}</label>
+            <input type="text" id="referral" v-model="referralSource" class="form__input" required />
+          </div>
+
+          <Transition name="msg">
+            <div
+              v-if="submitStatus.visible"
+              class="form__message"
+              :class="submitStatus.success ? 'form__message--ok' : 'form__message--err'"
+            >
+              {{ submitStatus.message }}
+            </div>
+          </Transition>
+
+          <!--
+            Honeypot. Positioned off-screen rather than type="hidden": a hidden
+            input is trivially skipped by a bot, a text input moved out of the
+            viewport is not. Kept out of the tab order and the a11y tree.
+          -->
+          <div class="hp" aria-hidden="true">
+            <label :for="contactForm.honeypotField">Do not fill this in</label>
             <input
+              :id="contactForm.honeypotField"
+              v-model="honeypot"
               type="text"
-              id="referral"
-              v-model="referralSource"
-              class="formInput"
-              required
+              tabindex="-1"
+              autocomplete="off"
             />
           </div>
 
-          <div v-if="submitStatus.visible" class="formMessage" :class="{ 'success': submitStatus.success, 'error': !submitStatus.success }">
-            {{ submitStatus.message }}
-          </div>
-
-          <button type="submit" class="submitButton btn oval" :disabled="isSubmitting">
-            {{ isSubmitting ? 'SENDING...' : 'SUBMIT' }}
+          <button type="submit" class="pill pill--iris form__submit" :disabled="isSubmitting">
+            {{ isSubmitting ? copy.contact.submitting : copy.contact.submit }}
           </button>
         </form>
-
-        <div class="contactSideDecor">
-          <FlowerArt3 />
-        </div>
       </div>
-
     </div>
-
-
-
-  </div>
+  </main>
 </template>
 
 <style scoped lang="scss">
-@import "../assets/Text";
-@import "../assets/Colors";
+@import "../assets/Colors.scss";
+@import "../assets/Text.scss";
 
-.contactPage {
+.contact {
+  position: relative;
+  min-height: 100svh;
+  padding-top: calc(4.75rem + clamp(2.5rem, 6vw, 5rem));
+  padding-bottom: $section;
+  overflow: clip;
+}
+
+.contact__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: clamp(2.5rem, 6vw, 7rem);
+  align-items: start;
+
+  @media (max-width: 860px) { grid-template-columns: 1fr; }
+}
+
+.contact__title {
+  font-size: clamp(3.6rem, 9.5vw, 8.5rem);
+  line-height: 0.98;
+
+  span { display: block; }
+}
+
+.contact__accent {
+  padding-left: clamp(1rem, 4vw, 4rem);
+  color: $rose;
+}
+
+.contact__blurb {
+  margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  max-width: 38ch;
+}
+
+.contact__facts {
+  list-style: none;
+  margin: clamp(1.8rem, 3vw, 2.6rem) 0 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  min-height:  calc(100vh - 200px);
-  padding: 0 24px;
-  background-color: $background;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 0.85rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 400;
+    font-size: 0.98rem;
+  }
 }
 
-.contactSection {
-  position: relative;
-  padding: $paddingLg;
-  margin-top: $paddingMd;
-  border-radius: 24px;
-  background-color: $background;
+// ── form ───────────────────────────────────────────────────────────────
+.contact__formWrap {
+  background: $cream;
+  border: 1px solid $hairline;
+  border-radius: clamp(28px, 4vw, 48px);
+  padding: clamp(1.8rem, 4vw, 3.2rem);
+  box-shadow: 0 30px 80px rgba(43, 31, 61, 0.07);
 }
 
-.contactHeader {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin-top: 200px;
-  padding: 50px 0 50px;
-  background-color: $secondary;
-  border-radius: 24px;
-  margin-bottom: 50px;
-}
-
-.headerContent {
-  max-width: 80%;
-  text-align: center;
-}
-
-.contactText {
-  margin-top: $paddingMd;
-  font-size: $fontNormal;
-  line-height: 1.6;
-}
-
-.decorElement {
-  position: absolute;
-  width: 250px;
-  height: 250px;
-  right: 0;
-  top: 20%;
-  color: $primary;
-}
-
-.contactFormContainer {
-  display: flex;
-  position: relative;
-  margin-top: $paddingLg;
-  padding-bottom: 50px;
-}
-
-.contactForm {
-  background-color: $secondary;
-  border-radius: 24px;
-  padding: $paddingLg;
-  width: 70%;
-  margin: 0 auto;
-}
-
-.formRow {
+.form__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $paddingMd;
-  margin-bottom: $paddingMd;
+  gap: 1.2rem;
+
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
 }
 
-.formGroup {
-  margin-bottom: $paddingMd;
-}
+.form__group { margin-bottom: 1.35rem; }
 
-.formLabel {
+.form__label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  color: $primary;
 }
 
-.formInput, .formSelect {
+.form__input {
   width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 24px;
-  background-color: $background;
-  font-family: "Outfit", sans-serif;
-  font-size: $fontNormal;
-  color: $primary;
-  box-sizing: border-box;
+  padding: 0.95rem 1.3rem;
+  border: 1.5px solid transparent;
+  border-radius: 18px;
+  background: $paper;
+  font-family: $font-body;
+  font-size: 1rem;
+  font-weight: 300;
+  color: $ink;
+  transition: border-color 0.4s var(--ease), background-color 0.4s;
+
+  &:focus {
+    outline: none;
+    border-color: $iris;
+    background: $cream;
+  }
 }
 
-.formSelect {
+.form__select {
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232B1F3D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px top 50%;
-  background-size: 12px auto;
-  padding-right: 30px;
-}
-
-.submitButton {
-  display: block;
-  margin: $paddingLg auto 0;
+  background-position: right 1.1rem center;
+  background-size: 1rem;
+  padding-right: 2.8rem;
   cursor: pointer;
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
 }
 
-.formMessage {
-  padding: 10px 15px;
-  border-radius: 24px;
-  margin-bottom: 15px;
+.form__message {
+  padding: 0.85rem 1.2rem;
+  border-radius: 16px;
+  margin-bottom: 1.2rem;
   text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
+  font-weight: 400;
 
-  &.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-  }
-
-  &.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-  }
+  &--ok { background: $mint; color: #1E6F4B; }
+  &--err { background: $blush; color: #9E2558; }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.msg-enter-active, .msg-leave-active { transition: opacity 0.4s, transform 0.4s var(--ease); }
+.msg-enter-from, .msg-leave-to { opacity: 0; transform: translateY(-8px); }
+
+.form__submit {
+  width: 100%;
+  margin-top: 0.4rem;
 }
 
-.contactSideDecor {
+/* honeypot: out of sight and out of the tab order, but a real input */
+.hp {
   position: absolute;
-  width: 200px;
-  height: 200px;
-  bottom: 2%;
-  left: -2%;
-  transform: rotate(-45deg);
-  color: $primary;
-  z-index: 1;
-}
-
-.button{
-  outline: none;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-@media (max-width: 768px) {
-  .headerContent {
-    max-width: 100%;
-  }
-
-  .contactForm {
-    width: 90%;
-  }
-
-  .formRow {
-    grid-template-columns: 1fr;
-  }
-
-  .contactSideDecor {
-    display: none;
-  }
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 </style>

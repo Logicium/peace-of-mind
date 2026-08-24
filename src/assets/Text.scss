@@ -1,43 +1,42 @@
-// Base font sizes in pixels (for reference)
-$fontXl-base: 48px;
-$fontBig-base: 38px;
-$fontMed-base: 28px;
-$fontNormal-base: 18px;
-$fontSm-base: 12px;
+// ── Peace of Mind · type scale ─────────────────────────────────────────
+// Fraunces (display) + Outfit (body / UI).
 
-// Responsive font sizes using a combination of rem and vw units
-$fontXl: clamp(1rem, 1rem + 3vw, 3rem); // ~40px to 48px
-$fontBig: clamp(2rem, 1.8rem + 1vw, 2.4rem); // ~32px to 38px
-$fontMed: clamp(1.5rem, 1.3rem + 0.8vw, 1.75rem); // ~24px to 28px
-$fontNormal: clamp(1rem, 0.9rem + 0.5vw, 1.125rem); // ~16px to 18px
-$fontSm: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem); // ~12px to 13px
+$font-display: "Fraunces", Georgia, serif;
+$font-body: "Outfit", "Segoe UI", sans-serif;
 
-// Padding values (unchanged)
-$paddingXs: 5px;
-$paddingSm: 10px;
-$paddingMd: 20px;
-$paddingLg: 30px;
-$paddingXl: 40px;
+$display-hero: clamp(3.4rem, 9.5vw, 8.25rem);
+$display-xl:   clamp(2.6rem, 6.5vw, 5.25rem);
+$display-lg:   clamp(2rem, 4.5vw, 3.5rem);
+$display-md:   clamp(1.55rem, 3vw, 2.35rem);
+$body-xl:      clamp(1.25rem, 2vw, 1.7rem);
+$body-lg:      clamp(1.1rem, 1.4vw, 1.3rem);
+$body:         clamp(1rem, 1.1vw, 1.1rem);
+$small:        0.875rem;
+$tiny:         0.78rem;
 
-// Media queries for different screen sizes
+// legacy aliases
+$fontXl: $display-xl;
+$fontBig: $display-lg;
+$fontMed: $display-md;
+$fontNormal: $body;
+$fontSm: $small;
+
+// spacing
+$paddingXs: 6px;
+$paddingSm: 12px;
+$paddingMd: 24px;
+$paddingLg: 40px;
+$paddingXl: 64px;
+
+$section: clamp(5rem, 11vw, 10rem);   // vertical rhythm between sections
+$gutter: clamp(1.25rem, 4.5vw, 4.5rem);
+
 @mixin small-screen {
-  @media (max-width: 576px) {
-    @content;
-  }
+  @media (max-width: 576px) { @content; }
 }
-
 @mixin medium-screen {
-  @media (min-width: 577px) and (max-width: 992px) {
-    @content;
-  }
+  @media (min-width: 577px) and (max-width: 992px) { @content; }
 }
-
 @mixin large-screen {
-  @media (min-width: 993px) {
-    @content;
-  }
-}
-
-.small{
-  font-size: $fontSm;
+  @media (min-width: 993px) { @content; }
 }
