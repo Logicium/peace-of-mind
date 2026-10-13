@@ -2,6 +2,9 @@
   "extends": "@tsconfig/node22/tsconfig.json",
   "include": [
     "vite.config.*",
+    "src/kit/seo/stamp.ts",
+    "src/kit/seo/plugin.ts",
+    "src/kit/seo/postbuild.ts",
     "vitest.config.*",
     "cypress.config.*",
     "nightwatch.conf.*",

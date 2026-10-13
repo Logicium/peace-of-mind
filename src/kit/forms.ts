@@ -19,6 +19,8 @@ export type FormFieldType =
   | 'select'
   | 'checkbox'
   | 'date'
+  | 'number'
+  | 'time'
 
 export interface FormFieldDef {
   key: string

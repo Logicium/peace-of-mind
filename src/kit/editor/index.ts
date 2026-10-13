@@ -185,6 +185,9 @@ export function initApotomeEditor(options: EditorOptions): void {
   const ready = hasTicket ? redeemHandoffTicket(options.apiUrl) : Promise.resolve()
   void ready.then(() => import('./EditorBar.vue')).then((mod) => {
     const host = document.createElement('div')
+    // Stable hook so a host site can hide the bar on pages where chrome is
+    // unwelcome (a fullscreen deck, a kiosk view) without unmounting it.
+    host.className = 'apotome-editor-host'
     document.body.appendChild(host)
     createApp(mod.default).mount(host)
   })
