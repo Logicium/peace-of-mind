@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.2.0; edit the source, then re-run vendor.mjs */
 /**
  * The postbuild step: one HTML file per public route, plus sitemap.xml,
  * robots.txt, llms.txt, 404.html and a report. Section 13.3 of the standard.

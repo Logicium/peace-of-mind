@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.2.0; edit the source, then re-run vendor.mjs */
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 /**
@@ -23,6 +23,8 @@ import type { ResolvedPage, SiteConfig } from './types'
 const OWNED = 'data-seo'
 let installedSite: SiteConfig | null = null
 let currentRoute: RouteLocationNormalizedLoaded | null = null
+/** the record a page supplied through useSeoData, and the path it belongs to */
+let loaded: { path: string; data: unknown } | null = null
 
 export function applyHead(site: SiteConfig, page: ResolvedPage): void {
   if (typeof document === 'undefined') return
@@ -55,12 +57,16 @@ export function resolveRoute(site: SiteConfig, route: RouteLocationNormalizedLoa
 /** Apply the route's static SEO on every navigation. */
 export function installSeo(router: Router, site: SiteConfig): void {
   installedSite = site
-  router.afterEach((to) => {
+  router.afterEach((to, from) => {
     currentRoute = to as RouteLocationNormalizedLoaded
+    // the same page with a new hash or query keeps the head it already has
+    if (from && to.path === from.path && from.matched.length) return
     // a dynamic route with no data yet gets its static fields; the page
-    // completes them through useSeoData once its record arrives
+    // completes them through useSeoData once its record arrives. A record
+    // already loaded for this exact path is reused.
+    const data = loaded && loaded.path === to.path ? loaded.data : undefined
     try {
-      applyHead(site, resolveRoute(site, currentRoute))
+      applyHead(site, resolveRoute(site, currentRoute, data))
     } catch (err) {
       // a head that cannot be built must never break navigation
       console.warn('[seo] head not applied for', to.path, err)
@@ -81,7 +87,9 @@ export function useSeoData<T>(data: MaybeRefOrGetter<T | null | undefined>): voi
   const stop = watch(
     () => toValue(data),
     (d) => {
-      if (d && currentRoute) applyHead(site, resolveRoute(site, currentRoute, d))
+      if (!d || !currentRoute) return
+      loaded = { path: currentRoute.path, data: d }
+      applyHead(site, resolveRoute(site, currentRoute, d))
     },
     { immediate: true },
   )
