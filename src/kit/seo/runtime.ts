@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 /**
@@ -59,7 +59,12 @@ export function installSeo(router: Router, site: SiteConfig): void {
     currentRoute = to as RouteLocationNormalizedLoaded
     // a dynamic route with no data yet gets its static fields; the page
     // completes them through useSeoData once its record arrives
-    applyHead(site, resolveRoute(site, currentRoute))
+    try {
+      applyHead(site, resolveRoute(site, currentRoute))
+    } catch (err) {
+      // a head that cannot be built must never break navigation
+      console.warn('[seo] head not applied for', to.path, err)
+    }
   })
 }
 

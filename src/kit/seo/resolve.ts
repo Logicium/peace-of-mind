@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
 /**
  * From a route and its context to a ResolvedPage.
  *
@@ -13,8 +13,23 @@ import { absImage, absUrl, normalizePath, titleCase, truncate } from './text'
 import { privatePrefixes } from './robots'
 import type { Crumb, PageContext, ResolvedPage, RouteSeo, SiteConfig } from './types'
 
-const val = <T>(v: T | ((ctx: PageContext) => T) | undefined, ctx: PageContext): T | undefined =>
-  typeof v === 'function' ? (v as (c: PageContext) => T)(ctx) : v
+/**
+ * A field's value: the value itself, or the function applied to the context.
+ *
+ * When `lenient` is set (a dynamic route whose record has not loaded yet, as on
+ * a client-side visit before the page fetches it), a field that throws reads as
+ * unset, so the head falls back to the site defaults until useSeoData supplies
+ * the record. At build every instance has its record, so errors still surface.
+ */
+function val<T>(v: T | ((ctx: PageContext) => T) | undefined, ctx: PageContext, lenient = false): T | undefined {
+  if (typeof v !== 'function') return v
+  if (!lenient) return (v as (c: PageContext) => T)(ctx)
+  try {
+    return (v as (c: PageContext) => T)(ctx)
+  } catch {
+    return undefined
+  }
+}
 
 export function isPrivatePath(site: SiteConfig, path: string): boolean {
   const p = normalizePath(path)
@@ -54,14 +69,17 @@ export function crumbsFromPath(path: string, lastName?: string): Crumb[] {
 export function resolvePage(site: SiteConfig, seo: RouteSeo | undefined, ctx: PageContext): ResolvedPage {
   const path = normalizePath(ctx.path)
   const s = seo ?? {}
-  const rawTitle = val(s.title, ctx)
+  // a dynamic route visited before its record has loaded
+  const waiting = Boolean(s.expand) && (ctx.data === undefined || ctx.data === null)
+  const v = <T>(field: T | ((c: PageContext) => T) | undefined) => val(field, ctx, waiting)
+  const rawTitle = v(s.title)
   const title = pageTitle(site, rawTitle, path)
-  const description = truncate(val(s.description, ctx) || site.description, 160)
-  const image = absImage(site, val(s.image, ctx))
-  const type = val(s.type, ctx) ?? (path === '/' && isPerson(site.entity.type) ? 'profile' : 'website')
-  const noindex = Boolean(val(s.noindex, ctx)) || isPrivatePath(site, path) || site.indexable === false
-  const lastmod = val(s.lastmod, ctx)
-  const article = val(s.article, ctx)
+  const description = truncate(v(s.description) || site.description, 160)
+  const image = absImage(site, v(s.image))
+  const type = v(s.type) ?? (path === '/' && isPerson(site.entity.type) ? 'profile' : 'website')
+  const noindex = Boolean(v(s.noindex)) || isPrivatePath(site, path) || site.indexable === false
+  const lastmod = v(s.lastmod)
+  const article = v(s.article)
   const url = absUrl(site, path)
 
   let jsonLd: object[] = []
@@ -72,14 +90,14 @@ export function resolvePage(site: SiteConfig, seo: RouteSeo | undefined, ctx: Pa
       if (isPerson(site.entity.type)) nodes.push(profilePageNode(site, '/'))
     } else {
       nodes.push(webPageNode(site, { path, title, description, image, type, lastmod }))
-      const bc = val(s.breadcrumb, ctx)
+      const bc = v(s.breadcrumb)
       const crumbs: Crumb[] =
         bc === undefined
           ? crumbsFromPath(path, rawTitle)
           : (bc as (Crumb | string)[]).map((c, i, a) => (typeof c === 'string' ? { name: c, path: i === a.length - 1 ? undefined : crumbsFromPath(path)[i]?.path } : c))
       nodes.push(breadcrumbNode(site, path, crumbs))
     }
-    const extra = s.schema?.(ctx)
+    const extra = waiting ? undefined : s.schema?.(ctx)
     if (extra) nodes.push(...(Array.isArray(extra) ? extra : [extra]))
     if (site.extraJsonLd) nodes.push(...site.extraJsonLd)
     // the entity is referenced by @id from every page; include the node itself on
@@ -87,7 +105,7 @@ export function resolvePage(site: SiteConfig, seo: RouteSeo | undefined, ctx: Pa
     jsonLd = [graph(nodes.filter((n) => n && (path === '/' || (n as { '@id'?: string })['@id'] !== entityId(site))))]
   }
 
-  const body = s.body?.(ctx)
-  const sitemapImage = val(s.sitemapImage, ctx)
+  const body = waiting ? undefined : s.body?.(ctx)
+  const sitemapImage = v(s.sitemapImage)
   return { path, url, title, description, image, type, noindex, jsonLd, lastmod, article, body, sitemapImage: sitemapImage ? absImage(site, sitemapImage) : undefined }
 }

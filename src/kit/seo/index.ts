@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
 /**
  * @apotome/seo, browser-safe entry.
  *

@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
 /** String helpers shared by the browser and Node halves. */
 
 import type { SeoImage, SiteConfig } from './types'

@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
 /**
  * JSON-LD builders.
  *
@@ -89,15 +89,33 @@ export function compact<T extends Record<string, unknown>>(node: T): T {
   return out as T
 }
 
+/** A stable fragment for an @id: lowercase words joined by hyphens. */
+export function idSlug(text: string): string {
+  return (
+    String(text)
+      .normalize('NFKD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60) || 'item'
+  )
+}
+
 export function graph(nodes: (object | undefined | null)[]): object {
-  const seen = new Set<string>()
+  const seen = new Map<string, string>()
   const list: object[] = []
   for (const n of nodes) {
     if (!n) continue
     const id = (n as { '@id'?: string })['@id']
     if (id) {
-      if (seen.has(id)) continue
-      seen.add(id)
+      const prev = seen.get(id)
+      if (prev !== undefined) {
+        // the same node twice is fine; two different nodes under one id lose one of them
+        if (prev !== JSON.stringify(n)) console.warn(`[seo] two different nodes share @id ${id}; the second was dropped`)
+        continue
+      }
+      seen.set(id, JSON.stringify(n))
     }
     // a node built elsewhere may carry its own @context; the graph has one
     const { '@context': _ctx, ...rest } = n as Record<string, unknown>
@@ -324,7 +342,7 @@ export function productNode(site: SiteConfig, p: ProductInput): object {
   required('Product', 'image', images[0])
   return compact({
     '@type': 'Product',
-    '@id': `${url}#product`,
+    '@id': `${url}#product-${idSlug(p.sku ?? p.name)}`,
     name: required('Product', 'name', p.name),
     description: p.description ? truncate(p.description, 500) : undefined,
     image: images,
@@ -372,7 +390,7 @@ export function eventNode(site: SiteConfig, e: EventInput): object {
   required('Event', 'location', location)
   return compact({
     '@type': 'Event',
-    '@id': `${url}#event`,
+    '@id': `${url}#event-${idSlug(e.name)}-${String(e.startDate).slice(0, 10)}`,
     name: required('Event', 'name', e.name),
     description: e.description ? truncate(e.description, 500) : undefined,
     image: imageObject(site, e.image ?? site.image),
@@ -408,7 +426,7 @@ export interface ServiceInput {
 export function serviceNode(site: SiteConfig, s: ServiceInput): object {
   return compact({
     '@type': 'Service',
-    '@id': s.path ? `${absUrl(site, s.path)}#service` : undefined,
+    '@id': s.path ? `${absUrl(site, s.path)}#service-${idSlug(s.name)}` : undefined,
     name: required('Service', 'name', s.name),
     serviceType: s.type,
     description: s.description ? truncate(s.description, 300) : undefined,
@@ -449,7 +467,7 @@ export function itemListNode(site: SiteConfig, path: string, name: string, items
 export function personNode(site: SiteConfig, p: { path?: string; name: string; jobTitle?: string; image?: string; description?: string; sameAs?: string[]; url?: string }): object {
   return compact({
     '@type': 'Person',
-    '@id': p.path ? `${absUrl(site, p.path)}#person` : undefined,
+    '@id': p.path ? `${absUrl(site, p.path)}#person-${idSlug(p.name)}` : undefined,
     name: required('Person', 'name', p.name),
     jobTitle: p.jobTitle,
     image: p.image ? absUrl(site, p.image) : undefined,
@@ -467,7 +485,7 @@ export function creativeWorkNode(
   const url = absUrl(site, w.path)
   return compact({
     '@type': w.type ?? 'CreativeWork',
-    '@id': `${url}#work`,
+    '@id': `${url}#work-${idSlug(w.name)}`,
     name: required(w.type ?? 'CreativeWork', 'name', w.name),
     description: w.description ? truncate(w.description, 300) : undefined,
     image: w.image ? absUrl(site, w.image) : undefined,

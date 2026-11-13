@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
 /**
  * The postbuild step: one HTML file per public route, plus sitemap.xml,
  * robots.txt, llms.txt, 404.html and a report. Section 13.3 of the standard.
@@ -114,12 +114,18 @@ export async function prerender(opts: PrerenderOptions): Promise<PrerenderResult
   }
 
   // bodies
+  // a page whose body a previous step rendered keeps that step's whole file as
+  // its base, so its own stylesheets and preloads survive; only the head changes
+  const bases = new Map<string, string>()
   if (opts.preserveBodies) {
     for (const p of pages) {
       if (p.body) continue
       const existing = await readFile(fileFor(dist, p.path, opts.layout ?? 'clean'), 'utf8').catch(() => null)
       const body = existing ? appDivContent(existing) : null
-      if (body && body.trim().length > 200) p.body = body
+      if (existing && body && body.trim().length > 200) {
+        p.body = body
+        bases.set(p.path, existing)
+      }
     }
   }
   const needBody = pages.filter((p) => !p.body && !p.noindex)
@@ -143,7 +149,7 @@ export async function prerender(opts: PrerenderOptions): Promise<PrerenderResult
     for (const p of needBody) p.body = floorBody(site, p, pages)
   }
 
-  const written = await writeAll(dist, template, site, pages, opts.layout ?? 'clean')
+  const written = await writeAll(dist, template, site, pages, opts.layout ?? 'clean', bases)
 
   // 404
   const notFound = resolvePage(site, { title: opts.notFoundTitle ?? 'Page not found', description: `That page is not on ${site.name}.`, noindex: true }, { site, path: '/404', params: {}, data: undefined })
@@ -185,12 +191,12 @@ export function floorBody(site: SiteConfig, page: ResolvedPage, all: ResolvedPag
   return `<main><h1>${esc(h1)}</h1><p>${esc(page.description)}</p>${navList(site, all)}</main>`
 }
 
-async function writeAll(dist: string, template: string, site: SiteConfig, pages: ResolvedPage[], layout: 'clean' | 'directory'): Promise<string[]> {
+async function writeAll(dist: string, template: string, site: SiteConfig, pages: ResolvedPage[], layout: 'clean' | 'directory', bases?: Map<string, string>): Promise<string[]> {
   const written: string[] = []
   for (const p of pages) {
     const file = fileFor(dist, p.path, layout)
     await mkdir(path.dirname(file), { recursive: true })
-    let html = injectHead(template, headHtml(site, p), site.lang ?? 'en')
+    let html = injectHead(bases?.get(p.path) ?? template, headHtml(site, p), site.lang ?? 'en')
     if (p.body) html = withAppBody(html, p.body)
     await writeFile(file, html, 'utf8')
     written.push(path.relative(dist, file).split(path.sep).join('/'))
@@ -209,7 +215,7 @@ function appDivBounds(html: string): { start: number; end: number } | null {
   const open = html.search(/<div\s+id=["']app["'][^>]*>/i)
   if (open < 0) return null
   const start = html.indexOf('>', open) + 1
-  const re = /<div|<\/div>/gi
+  const re = /<div\b|<\/div>/gi
   re.lastIndex = start
   let depth = 1
   let m: RegExpExecArray | null

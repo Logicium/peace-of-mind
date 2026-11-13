@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.1.1; edit the source, then re-run vendor.mjs */
 /**
  * The hosting config the standard requires (section 4.5), and a check that a
  * site's vercel.json matches it.
@@ -6,6 +6,9 @@
 
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
+
+/** Vite's hashed output (name-XXXXXXXX.ext) under /assets; immutable caching is safe for these only. */
+export const VERCEL_HASHED_ASSETS = '/assets/:file([^/]+-[A-Za-z0-9_-]{8}\\.[a-z0-9]+)'
 
 export const VERCEL_REWRITE_SOURCE = '/((?!assets/|api/|.*\\.[a-zA-Z0-9]+$).*)'
 
@@ -18,7 +21,8 @@ export function vercelConfig(opts: { privatePrefixes?: string[]; redirects?: { s
     ...(opts.redirects?.length ? { redirects: opts.redirects.map((r) => ({ permanent: true, ...r })) } : {}),
     rewrites: [{ source: VERCEL_REWRITE_SOURCE, destination: opts.fallback === '404' ? '/404.html' : '/index.html' }],
     headers: [
-      { source: '/assets/(.*)', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
+      // hashed build output only: an unhashed file a site keeps under public/assets must stay revalidated
+      { source: VERCEL_HASHED_ASSETS, headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
       { source: '/(.*)', headers: [{ key: 'X-Content-Type-Options', value: 'nosniff' }, { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }] },
       { source: `/(${prefixes.join('|')})(/.*)?`, headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
     ],
