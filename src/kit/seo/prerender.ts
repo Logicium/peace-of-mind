@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.2.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
 /**
  * The postbuild step: one HTML file per public route, plus sitemap.xml,
  * robots.txt, llms.txt, 404.html and a report. Section 13.3 of the standard.
@@ -140,13 +140,30 @@ export async function prerender(opts: PrerenderOptions): Promise<PrerenderResult
       // a browser that will not launch on this machine is not a reason to ship no site
       warnings.push(`browser snapshot failed (${err instanceof Error ? err.message.split('\n')[0] : err}); used floor bodies`)
     }
+    const missed: string[] = []
     for (const p of needBody) {
       const shot = shots?.get(p.path)
-      p.body = shot && shot.length > 200 ? shot : floorBody(site, p, pages)
-      if (!shot || shot.length <= 200) warnings.push(`${p.path}: browser snapshot empty, used floor body`)
+      if (shot && shot.length > 200) p.body = shot
+      else missed.push(p.path)
     }
-  } else {
-    for (const p of needBody) p.body = floorBody(site, p, pages)
+    // On a build server a browser that is not there or will not run is not a
+    // passing build with a warning: it is a site shipping empty pages without
+    // anyone looking. Fail and say what to do instead. Locally, fall back.
+    if (missed.length && onBuildServer()) {
+      throw new Error(
+        `[seo] render: "browser" produced no body for ${missed.length} page(s) on this build server (${missed.join(', ')}). ` +
+          'Hosted build images usually cannot run Chrome. Build those bodies from data with seo.body instead.',
+      )
+    }
+  }
+  const floored: string[] = []
+  for (const p of pages) {
+    if (p.body || p.noindex) continue
+    p.body = floorBody(site, p, pages)
+    floored.push(p.path)
+  }
+  if (floored.length) {
+    warnings.push(`${floored.length} indexable page(s) ship only a heading, description and links, with no seo.body: ${floored.join(', ')}`)
   }
 
   const written = await writeAll(dist, template, site, pages, opts.layout ?? 'clean', bases)
@@ -168,7 +185,7 @@ export async function prerender(opts: PrerenderOptions): Promise<PrerenderResult
   const report = {
     generatedAt: new Date().toISOString(),
     site: site.siteUrl,
-    pages: pages.map((p) => ({ path: p.path, title: p.title, noindex: p.noindex, lastmod: p.lastmod ?? null, bodyChars: p.body?.length ?? 0 })),
+    pages: pages.map((p) => ({ path: p.path, title: p.title, noindex: p.noindex, lastmod: p.lastmod ?? null, bodyChars: p.body?.length ?? 0, floorBody: floored.includes(p.path) })),
     skipped,
     warnings,
   }
@@ -186,6 +203,12 @@ function navList(site: SiteConfig, pages: ResolvedPage[]): string {
 }
 
 /** The minimum readable page: heading, description, navigation. */
+/** True on a hosted or CI build (Vercel, Netlify, GitHub Actions and most others set one of these). */
+export function onBuildServer(): boolean {
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
+  return Boolean(env.CI || env.VERCEL || env.NETLIFY || env.GITHUB_ACTIONS || env.RENDER)
+}
+
 export function floorBody(site: SiteConfig, page: ResolvedPage, all: ResolvedPage[]): string {
   const h1 = page.path === '/' ? site.name : stripBrand(site, page.title)
   return `<main><h1>${esc(h1)}</h1><p>${esc(page.description)}</p>${navList(site, all)}</main>`

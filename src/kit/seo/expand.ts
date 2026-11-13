@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.2.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
 /**
  * From the route table to the list of pages to prerender.
  *

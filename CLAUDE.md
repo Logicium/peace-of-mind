@@ -5,7 +5,7 @@
 
 This site follows the Apotome Labs SEO + AEO Standard, version 1.1
 (https://www.apotomelabs.com/standards/seo). The shared module in `src/kit/seo/` (apotome-seo
-1.2.0) implements it. These rules apply to every change.
+1.3.0) implements it. These rules apply to every change.
 
 - `src/kit/seo/` is vendored. Never edit it here: change `../apotome-seo/src`, then run
   `node ../apotome-seo/vendor.mjs <this repo> --into src/kit/seo`. That also refreshes this section.

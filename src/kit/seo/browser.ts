@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.2.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 /**
@@ -103,23 +103,71 @@ export interface SnapshotOptions {
   /** selectors removed from the snapshot besides script, canvas and style */
   strip?: string[]
   log?: (line: string) => void
+  /**
+   * The whole browser step's budget in ms (default 5 minutes). Pages not
+   * reached in time get floor bodies. A hosted build has a hard wall-clock
+   * limit (Vercel's is 45 minutes) and a stuck headless browser would
+   * otherwise spend all of it and ship nothing.
+   */
+  budget?: number
+}
+
+/** Resolves with the promise, or with `fallback` once `ms` have passed; never rejects. */
+function within<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve(fallback), ms)
+    promise.then(
+      (v) => {
+        clearTimeout(t)
+        resolve(v)
+      },
+      () => {
+        clearTimeout(t)
+        resolve(fallback)
+      },
+    )
+  })
 }
 
 /**
  * Snapshot `#app` for each path. Returns null when no browser is available so
  * the caller can fall back; throws only when the browser is there and fails.
+ *
+ * Every step is bounded. Build machines are where headless Chrome misbehaves
+ * (no GPU, a tiny /dev/shm, missing libraries): it may never launch, stall
+ * mid-page, or ignore close(). So launch has a timeout, each page has one and
+ * a failed page is skipped rather than ending the run, the run has a budget,
+ * and teardown kills the browser process if it will not close, so nothing
+ * here can keep the build process alive.
  */
 export async function snapshotBodies(dist: string, paths: string[], opts: SnapshotOptions = {}): Promise<Map<string, string> | null> {
   const found = await launcher()
   if (!found) return null
   const { server, origin } = await serveDist(dist)
   const out = new Map<string, string>()
-  const browser = await found.browser.launch(found.args)
+  const started = Date.now()
+  const budget = opts.budget ?? 5 * 60_000
+  let browser: Awaited<ReturnType<Launcher['launch']>> | null = null
   try {
+    browser = await found.browser.launch({ ...found.args, timeout: 60_000, protocolTimeout: 90_000 })
     const page = await browser.newPage()
     await page.setViewport({ width: opts.width ?? 1280, height: opts.height ?? 900 })
+    let failures = 0
     for (const p of paths) {
-      await page.goto(`${origin}${p}`, { waitUntil: 'networkidle0', timeout: 60_000 })
+      if (Date.now() - started > budget) {
+        opts.log?.(`[seo] browser budget of ${Math.round(budget / 1000)}s spent; ${paths.length - out.size} page(s) left for floor bodies`)
+        break
+      }
+      try {
+        await page.goto(`${origin}${p}`, { waitUntil: 'networkidle0', timeout: 30_000 })
+      } catch (err) {
+        // a page that never goes network-idle is still worth capturing if it rendered
+        opts.log?.(`[seo] ${p}: ${err instanceof Error ? err.message.split('\n')[0] : err}`)
+        if (++failures >= 3) {
+          opts.log?.('[seo] three pages failed to load; stopping the browser and using floor bodies for the rest')
+          break
+        }
+      }
       if (opts.settle) await new Promise((r) => setTimeout(r, opts.settle))
       const strip = ['script', 'canvas', 'style', 'noscript', ...(opts.strip ?? [])]
       const html = await page
@@ -144,9 +192,17 @@ export async function snapshotBodies(dist: string, paths: string[], opts: Snapsh
       out.set(p, html.replace(/\s{2,}/g, ' ').trim())
       opts.log?.(`[seo] snapshot ${p} (${out.get(p)!.length} chars)`)
     }
-    await page.close()
+    await within(page.close(), 10_000, undefined)
   } finally {
-    await browser.close()
+    if (browser) {
+      const closed = await within(browser.close().then(() => true), 15_000, false)
+      if (!closed) {
+        opts.log?.('[seo] the browser would not close; killing it')
+        ;(browser as unknown as { process?: () => { kill: (s: string) => void } | null }).process?.()?.kill('SIGKILL')
+      }
+    }
+    // keep-alive sockets from the browser would hold the build process open
+    ;(server as Server & { closeAllConnections?: () => void }).closeAllConnections?.()
     server.close()
   }
   return out
