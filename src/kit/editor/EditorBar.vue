@@ -115,6 +115,111 @@ async function submit() {
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
+
+/* a link whose target can be changed: same dashed mark as editable text */
+.apk-editable-link {
+  outline: 1px dashed rgba(36, 71, 232, 0.55);
+  outline-offset: 2px;
+}
+
+.apk-link-chip {
+  position: fixed;
+  z-index: 2147483000;
+  display: none;
+  align-items: center;
+  padding: 7px 11px;
+  border: 0;
+  background: #2447e8;
+  color: #f2f0eb;
+  font: 600 10px/1 ui-monospace, 'JetBrains Mono', Consolas, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.apk-link-pop {
+  position: fixed;
+  z-index: 2147483002;
+  box-sizing: border-box;
+  width: min(340px, calc(100vw - 16px));
+  padding: 14px;
+  /* the hairline keeps the box readable when the page under it is dark too */
+  border: 1px solid rgba(242, 240, 235, 0.28);
+  background: #0a0a0a;
+  color: #f2f0eb;
+  font: 500 11px/1.4 ui-monospace, 'JetBrains Mono', Consolas, monospace;
+  letter-spacing: 0.08em;
+  text-align: left;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+}
+
+.apk-link-label {
+  display: block;
+  text-transform: uppercase;
+  color: rgba(242, 240, 235, 0.6);
+}
+
+.apk-link-input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px 10px;
+  background: transparent;
+  border: 1px solid rgba(242, 240, 235, 0.3);
+  border-radius: 0;
+  color: #f2f0eb;
+  font: 500 13px/1.3 ui-monospace, 'JetBrains Mono', Consolas, monospace;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.apk-link-input:focus {
+  outline: none;
+  border-color: #2447e8;
+}
+
+.apk-link-msg {
+  min-height: 1.4em;
+  margin: 6px 0 4px;
+  color: #ff8a66;
+  letter-spacing: 0.02em;
+}
+
+.apk-link-row {
+  display: flex;
+  gap: 8px;
+}
+
+.apk-link-btn {
+  padding: 7px 12px;
+  background: transparent;
+  border: 1px solid rgba(242, 240, 235, 0.35);
+  border-radius: 0;
+  color: #f2f0eb;
+  font: inherit;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.apk-link-btn:hover {
+  border-color: #f2f0eb;
+}
+
+.apk-link-btn.solid {
+  background: #f2f0eb;
+  border-color: #f2f0eb;
+  color: #0a0a0a;
+}
+
+.apk-link-btn.quiet {
+  margin-left: auto;
+  border-color: transparent;
+  color: rgba(242, 240, 235, 0.6);
+}
 </style>
 
 <style scoped>
