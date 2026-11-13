@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.4.2; edit the source, then re-run vendor.mjs */
 /**
  * From a route and its context to a ResolvedPage.
  *
@@ -107,5 +107,20 @@ export function resolvePage(site: SiteConfig, seo: RouteSeo | undefined, ctx: Pa
 
   const body = waiting ? undefined : s.body?.(ctx)
   const sitemapImage = v(s.sitemapImage)
-  return { path, url, title, description, image, type, noindex, jsonLd, lastmod, article, body, sitemapImage: sitemapImage ? absImage(site, sitemapImage) : undefined }
+  return {
+    path,
+    url,
+    title,
+    description,
+    image,
+    type,
+    noindex,
+    jsonLd,
+    lastmod,
+    article,
+    body,
+    bodyComponent: waiting || body ? undefined : s.bodyComponent,
+    bodyProps: s.bodyProps,
+    sitemapImage: sitemapImage ? absImage(site, sitemapImage) : undefined,
+  }
 }

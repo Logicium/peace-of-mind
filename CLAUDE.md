@@ -5,14 +5,16 @@
 
 This site follows the Apotome Labs SEO + AEO Standard, version 1.1
 (https://www.apotomelabs.com/standards/seo). The shared module in `src/kit/seo/` (apotome-seo
-1.3.0) implements it. These rules apply to every change.
+1.4.2) implements it. These rules apply to every change.
 
 - `src/kit/seo/` is vendored. Never edit it here: change `../apotome-seo/src`, then run
   `node ../apotome-seo/vendor.mjs <this repo> --into src/kit/seo`. That also refreshes this section.
 - `src/routes.ts` is the one list of public routes. Each has a `meta.seo` record: `title` (the
   page part only; the brand is added), a unique answer-first `description` of 120 to 160
   characters, `schema` built with the module's builders, and `body` built from the data modules
-  so the prerendered page carries real text. A dynamic route also has `expand()`. A new public
+  so the prerendered page carries real text, or `bodyComponent` for a self-contained component such
+  as a legal document. A dynamic route also has `expand()`. Never use `render: 'browser'`: hosted
+  builds have no Chrome. A new public
   page goes there, never only into the router.
 - Site facts (name, address, phone, hours, socials, crawler policy, private prefixes) live in
   `src/seo.site.ts`. Take them only from the client's own data. Never invent one; the build fails

@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.4.2; edit the source, then re-run vendor.mjs */
 /**
  * The hosting config the standard requires (section 4.5), and a check that a
  * site's vercel.json matches it.

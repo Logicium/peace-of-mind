@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.4.2; edit the source, then re-run vendor.mjs */
 /**
  * @apotome/seo, Node entry: the prerender and its helpers. Build scripts only.
  */

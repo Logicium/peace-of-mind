@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.4.2; edit the source, then re-run vendor.mjs */
 /**
  * One page's head, as tags.
  *

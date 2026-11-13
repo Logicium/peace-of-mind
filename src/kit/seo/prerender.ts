@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.4.2; edit the source, then re-run vendor.mjs */
 /**
  * The postbuild step: one HTML file per public route, plus sitemap.xml,
  * robots.txt, llms.txt, 404.html and a report. Section 13.3 of the standard.
@@ -128,6 +128,20 @@ export async function prerender(opts: PrerenderOptions): Promise<PrerenderResult
       }
     }
   }
+  // static components rendered under Node: no browser, the same markup the page mounts
+  try {
+    for (const p of pages) {
+      if (p.body || p.noindex || !p.bodyComponent) continue
+      try {
+        p.body = await renderStatic(p.bodyComponent, p.bodyProps, p.path, root)
+      } catch (err) {
+        warnings.push(`${p.path}: bodyComponent could not render under Node (${err instanceof Error ? err.message.split('\n')[0] : err})`)
+      }
+    }
+  } finally {
+    // the loader is a Vite server; left open it would hold the build process
+    await closeStaticLoader()
+  }
   const needBody = pages.filter((p) => !p.body && !p.noindex)
   if (opts.render === 'browser' && needBody.length) {
     // write head-only files first so the browser loads a document per route
@@ -202,13 +216,182 @@ function navList(site: SiteConfig, pages: ResolvedPage[]): string {
   return `<nav aria-label="Site"><ul>${top.map((p) => `<li><a href="${esc(p.path)}">${esc(stripBrand(site, p.title))}</a></li>`).join('')}</ul></nav>`
 }
 
-/** The minimum readable page: heading, description, navigation. */
+/**
+ * Server-render one component to HTML, for a page body.
+ *
+ * `component` is either a path to a `.vue` file from the project root
+ * ("/src/views/TermsView.vue"), loaded through Vite's own SSR module loader
+ * so its template is compiled for the server against the same copy of Vue as
+ * the renderer, or a component object that is already server-safe (a render
+ * function). A path is the reliable choice for single-file components: under
+ * vite-node an imported `.vue` file is compiled for the browser and calls
+ * Vite's pre-bundled Vue, a second runtime the server renderer cannot drive.
+ *
+ * RouterLink becomes a plain link, useRouter()/useRoute() get an inert router
+ * for the given path, and every custom directive (v-reveal and the like) is a
+ * no-op, so the markup is what the page shows before its effects run.
+ */
+export async function renderStatic(component: unknown, props: Record<string, unknown> = {}, path = '/', root = process.cwd()): Promise<string> {
+  const restore = shimBrowserGlobals(path)
+  try {
+    return await renderWith(component, props, path, root)
+  } finally {
+    restore()
+  }
+}
+
+/**
+ * A minimal stand-in for `window`, `location` and `history`, present only
+ * while a body component loads and renders. Single-page apps often import
+ * their router instance somewhere in a component's import chain, and
+ * createWebHistory() reads window.location and adds window and document
+ * listeners the moment that module loads, and theme or layout code often sets
+ * a style on the root element. `document` offers inert root and body
+ * elements, listener methods and queries that find nothing; it cannot create
+ * elements, so code that builds real DOM still fails and is reported instead
+ * of rendered wrong.
+ */
+function shimBrowserGlobals(path: string): () => void {
+  const g = globalThis as Record<string, unknown>
+  if (typeof g.window !== 'undefined') return () => {}
+  const noop = () => {}
+  const location = { pathname: path, search: '', hash: '', host: 'localhost', hostname: 'localhost', origin: 'http://localhost', protocol: 'http:', href: `http://localhost${path}` }
+  const history = { state: null, length: 1, scrollRestoration: 'auto', pushState: noop, replaceState: noop, back: noop, forward: noop, go: noop }
+  const media = () => ({ matches: false, media: '', addEventListener: noop, removeEventListener: noop, addListener: noop, removeListener: noop })
+  const win = { location, history, addEventListener: noop, removeEventListener: noop, matchMedia: media, scrollTo: noop, innerWidth: 1280, innerHeight: 900, requestAnimationFrame: () => 0, cancelAnimationFrame: noop }
+  // inert root and body: setting a style or class at load is harmless; queries find nothing
+  const element = () => ({
+    style: { setProperty: noop, removeProperty: noop, getPropertyValue: () => '' },
+    classList: { add: noop, remove: noop, toggle: () => false, contains: () => false },
+    dataset: {},
+    setAttribute: noop,
+    removeAttribute: noop,
+    getAttribute: () => null,
+    addEventListener: noop,
+    removeEventListener: noop,
+  })
+  const doc = {
+    addEventListener: noop,
+    removeEventListener: noop,
+    visibilityState: 'visible',
+    hidden: false,
+    cookie: '',
+    documentElement: element(),
+    body: element(),
+    head: element(),
+    querySelector: () => null,
+    querySelectorAll: () => [],
+    getElementById: () => null,
+  }
+  // empty storage is a signed-out first visit, which is exactly what a crawler is
+  const storage = () => {
+    const m = new Map<string, string>()
+    return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, String(v)), removeItem: (k: string) => void m.delete(k), clear: () => m.clear(), key: (i: number) => [...m.keys()][i] ?? null, get length() { return m.size } }
+  }
+  const extras: Record<string, unknown> = { location, history, document: doc, localStorage: storage(), sessionStorage: storage() }
+  Object.assign(win, extras, { window: win })
+  // only names Node does not already define are added, and only those are removed
+  const added = Object.keys(extras).filter((k) => {
+    try {
+      return typeof g[k] === 'undefined'
+    } catch {
+      return false
+    }
+  })
+  g.window = win
+  for (const k of added) g[k] = extras[k]
+  return () => {
+    delete g.window
+    for (const k of added) delete g[k]
+  }
+}
+
+async function renderWith(component: unknown, props: Record<string, unknown>, path: string, root: string): Promise<string> {
+  const { createSSRApp, h, ref, defineComponent } = await import('vue')
+  const { renderToString } = await import('vue/server-renderer')
+  const { routerKey, routeLocationKey } = await import('vue-router')
+  let comp = component
+  if (typeof component === 'string') {
+    const server = await staticLoader(root)
+    const mod = (await server.ssrLoadModule(component)) as { default?: unknown }
+    if (!mod.default) throw new Error(`${component} has no default export`)
+    comp = mod.default
+  }
+  const route = { path, fullPath: path, name: undefined, params: {}, query: {}, hash: '', matched: [], meta: {} }
+  const noop = () => Promise.resolve()
+  const router = {
+    currentRoute: ref(route),
+    push: noop,
+    replace: noop,
+    back: () => {},
+    go: () => {},
+    resolve: (to: unknown) => ({ href: typeof to === 'string' ? to : ((to as { path?: string })?.path ?? '#') }),
+    beforeEach: () => () => {},
+    afterEach: () => () => {},
+    isReady: noop,
+  }
+  const app = createSSRApp({ render: () => h(comp as never, props) })
+  app.provide(routerKey, router as never)
+  app.provide(routeLocationKey, route as never)
+  const link = defineComponent({
+    props: { to: { type: [String, Object], required: true } },
+    setup(p, { slots, attrs }) {
+      return () => h('a', { ...attrs, href: typeof p.to === 'string' ? p.to : ((p.to as { path?: string }).path ?? '#') }, slots.default?.())
+    },
+  })
+  app.component('RouterLink', link)
+  app.component('router-link', link)
+  // a fresh store, when the site uses Pinia: layouts often read one (a navbar's signed-in state)
+  const PINIA = 'pinia'
+  const pinia = (await import(/* @vite-ignore */ PINIA).catch(() => null)) as { createPinia?: () => unknown } | null
+  if (pinia?.createPinia) app.use(pinia.createPinia() as never)
+  // every directive resolves, to nothing: reveal and motion directives only animate in a browser
+  const ctx = (app as unknown as { _context: { directives: Record<string, unknown> } })._context
+  ctx.directives = new Proxy(ctx.directives, { get: (t, k) => (typeof k === 'string' ? (t[k] ?? {}) : undefined) })
+  app.config.warnHandler = () => {}
+  const html = await renderToString(app)
+  return html.replace(/<!--\[-->|<!--\]-->|<!---->/g, '').replace(/\s{2,}/g, ' ').trim()
+}
+
+interface SsrServer {
+  ssrLoadModule: (url: string) => Promise<Record<string, unknown>>
+  close: () => Promise<void>
+}
+let loader: Promise<SsrServer> | null = null
+
+/** One Vite server in middleware mode, with the project's own config, for SSR loading only. */
+function staticLoader(root: string): Promise<SsrServer> {
+  if (!loader) {
+    // every site that runs a prerender has Vite; the module itself does not depend on it
+    const VITE = 'vite'
+    loader = (import(/* @vite-ignore */ VITE) as Promise<{ createServer: (c: object) => Promise<SsrServer> }>).then(({ createServer }) =>
+      createServer({
+        root,
+        logLevel: 'error',
+        appType: 'custom',
+        server: { middlewareMode: true, hmr: false, watch: null },
+        optimizeDeps: { noDiscovery: true, include: [] },
+      }) as unknown as Promise<SsrServer>,
+    )
+  }
+  return loader
+}
+
+/** Close the SSR loader if one was started; safe to call when none was. */
+export async function closeStaticLoader(): Promise<void> {
+  if (!loader) return
+  const l = loader
+  loader = null
+  await (await l).close()
+}
+
 /** True on a hosted or CI build (Vercel, Netlify, GitHub Actions and most others set one of these). */
 export function onBuildServer(): boolean {
   const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {}
   return Boolean(env.CI || env.VERCEL || env.NETLIFY || env.GITHUB_ACTIONS || env.RENDER)
 }
 
+/** The minimum readable page: heading, description, navigation. */
 export function floorBody(site: SiteConfig, page: ResolvedPage, all: ResolvedPage[]): string {
   const h1 = page.path === '/' ? site.name : stripBrand(site, page.title)
   return `<main><h1>${esc(h1)}</h1><p>${esc(page.description)}</p>${navList(site, all)}</main>`

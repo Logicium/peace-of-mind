@@ -16,7 +16,8 @@ Edit the source here, re-run the vendor script, rebuild the site.
    crawler `training` policy, and `privatePrefixes`.
 2. `src/routes.ts` exports `publicRoutes: RouteRecordRaw[]`, each with
    `meta.seo`: `title`, `description`, `image`, `type`, `breadcrumb`,
-   `lastmod`, `schema(ctx)`, `body(ctx)`. A dynamic route adds `expand(ctx)`
+   `lastmod`, `schema(ctx)`, `body(ctx)`, or `bodyComponent` (a self-contained component the
+   prerender server-renders under Node, for legal pages and the like). A dynamic route adds `expand(ctx)`
    returning `{ params, data }` instances and its fields become functions of
    `({ site, path, params, data })`. Export `notFoundRoute` for the catch-all
    with `noindex: true`.

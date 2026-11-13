@@ -1,4 +1,4 @@
-/* vendored from apotome-seo 1.3.0; edit the source, then re-run vendor.mjs */
+/* vendored from apotome-seo 1.4.2; edit the source, then re-run vendor.mjs */
 /**
  * The shapes behind the Apotome Labs SEO + AEO Standard.
  *
@@ -199,6 +199,15 @@ export interface RouteSeo<T = unknown> {
   schema?: (ctx: PageContext<T>) => object | object[] | undefined
   /** the prerendered body for #app, as HTML; a site-provided snapshot */
   body?: (ctx: PageContext<T>) => string
+  /**
+   * A component whose server render is this page's body, for pages whose
+   * content is a static component (a legal document, a pricing table). The
+   * prerender renders it under Node with no browser; it must not touch window
+   * or document during setup. `body` wins when both are set.
+   */
+  bodyComponent?: unknown
+  /** props for bodyComponent */
+  bodyProps?: Record<string, unknown>
   /** instances of a dynamic route, fetched at build */
   expand?: (ctx: ExpandContext) => Promise<RouteInstance<T>[]> | RouteInstance<T>[]
   /** the primary image for the image sitemap, when different from `image` */
@@ -224,6 +233,9 @@ export interface ResolvedPage {
   lastmod?: string
   article?: ArticleMeta
   body?: string
+  /** a component to server-render for the body, when there is no `body` */
+  bodyComponent?: unknown
+  bodyProps?: Record<string, unknown>
   sitemapImage?: SeoImage
 }
 
