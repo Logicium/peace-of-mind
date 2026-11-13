@@ -1,10 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from "@/pages/HomePage.vue";
-
-const AboutPage = () => import("@/pages/AboutPage.vue");
-const ContactPage = () => import("@/pages/ContactPage.vue");
-const OfferPage = () => import("@/pages/OfferPage.vue");
-
+// Public pages and their SEO records live in src/routes.ts; the head is
+// applied per route by installSeo in main.ts.
+import { notFoundRoute, publicRoutes } from '@/routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,28 +14,7 @@ const router = createRouter({
     }
     return { top: 0 };
   },
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomePage,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: AboutPage,
-    },
-    {
-      path: '/contact',
-      name: 'contact',
-      component: ContactPage,
-    },
-    {
-      path: '/offer',
-      name: 'offer',
-      component: OfferPage,
-    },
-  ],
+  routes: [...publicRoutes, notFoundRoute],
 })
 
 export default router

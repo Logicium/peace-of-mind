@@ -9,11 +9,15 @@ import { vPlx, vGrow, vReveal } from './motion/motion'
 import { initApotomeAnalytics } from './kit/analytics'
 import { applyDeep, initApotomeEditor, loadPublishedContent } from './kit/editor'
 import { content } from './data/site'
+import { installSeo } from './kit/seo'
+import { site as seoSite } from './seo.site'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+// the head follows the route table on every navigation; the build wrote the same tags per page
+installSeo(router, seoSite)
 
 app.directive('plx', vPlx)
 app.directive('grow', vGrow)

@@ -1,45 +1,29 @@
+/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
 /**
- * The two files a crawler asks for before it asks for anything else.
+ * sitemap.xml and llms.txt, from the resolved page list.
  *
- * Both are derived from the same page list the head tags use, so a page that
- * says noindex cannot end up advertised in the sitemap: the one inconsistency
- * that makes an engine distrust the rest of the file.
+ * lastmod only when a page knows it; never priority or changefreq (Google
+ * ignores both). Noindex pages are never listed. Section 4.4 of the standard.
  */
 
-import { imageFor, titleFor, urlFor, type SeoSettings } from './types'
+import { escXml, stripBrand, stripHtml, truncate } from './text'
+import type { ResolvedPage, SiteConfig } from './types'
 
-/** Pages that belong in a sitemap: indexed ones, on a site that is indexable. */
-export function sitemapPages(settings: SeoSettings) {
-  if (!settings.indexable || !settings.domain) return []
-  return settings.pages.filter((p) => !p.noindex)
+export function sitemapPages(site: SiteConfig, pages: ResolvedPage[]): ResolvedPage[] {
+  if (site.indexable === false) return []
+  return pages.filter((p) => !p.noindex)
 }
 
-export function buildSitemap(settings: SeoSettings, lastmod?: string): string {
-  const pages = sitemapPages(settings)
-  const day = (lastmod ?? new Date().toISOString()).slice(0, 10)
-  const entries = pages
-    .map((page) => {
-      const parts = [`    <loc>${escapeXml(urlFor(settings, page))}</loc>`, `    <lastmod>${day}</lastmod>`]
-      if (page.changefreq) parts.push(`    <changefreq>${page.changefreq}</changefreq>`)
-      // an explicit priority, or the home page's implicit claim to be first
-      const priority = page.priority ?? (page.path === '/' ? 1 : undefined)
-      if (priority !== undefined) parts.push(`    <priority>${priority.toFixed(1)}</priority>`)
-
-      /*
-       * The page's image, declared in the sitemap's image extension.
-       *
-       * Image search is a real door into a small business site, and it opens
-       * on a caption: the page's own title says what the picture is of, which
-       * a file called hero-2-final.jpg never will.
-       */
-      const image = imageFor(settings, page)
-      if (image) {
-        parts.push(
-          '    <image:image>',
-          `      <image:loc>${escapeXml(image)}</image:loc>`,
-          `      <image:caption>${escapeXml(titleFor(settings, page))}</image:caption>`,
-          '    </image:image>',
-        )
+export function buildSitemap(site: SiteConfig, pages: ResolvedPage[]): string {
+  const entries = sitemapPages(site, pages)
+    .map((p) => {
+      const parts = [`    <loc>${escXml(p.url)}</loc>`]
+      if (p.lastmod) parts.push(`    <lastmod>${escXml(p.lastmod.slice(0, 10))}</lastmod>`)
+      const img = p.sitemapImage ?? (p.type === 'article' || p.type === 'product' ? p.image : undefined)
+      if (img) {
+        parts.push('    <image:image>', `      <image:loc>${escXml(img.url)}</image:loc>`)
+        if (img.alt) parts.push(`      <image:caption>${escXml(img.alt)}</image:caption>`)
+        parts.push('    </image:image>')
       }
       return `  <url>\n${parts.join('\n')}\n  </url>`
     })
@@ -52,42 +36,35 @@ export function buildSitemap(settings: SeoSettings, lastmod?: string): string {
   )
 }
 
-/**
- * robots.txt.
- *
- * A site that is not indexable gets a blanket disallow rather than a missing
- * file, because "no robots.txt" means "crawl everything" and the client asked
- * for the opposite. Individual noindex pages are left out of the disallow
- * list on purpose: a disallowed page cannot be crawled, so the noindex tag on
- * it is never read, and a page linked from elsewhere can be indexed anyway.
- * The meta tag is the instrument that works; robots.txt only says where the
- * sitemap is.
- */
-export function buildRobots(settings: SeoSettings): string {
-  if (!settings.indexable) {
-    return 'User-agent: *\nDisallow: /\n'
+/** llms.txt per llmstxt.org: H1, blockquote summary, H2 sections of links. */
+export function buildLlmsTxt(site: SiteConfig, pages: ResolvedPage[]): string {
+  const listed = sitemapPages(site, pages)
+  const home = listed.find((p) => p.path === '/')
+  const top = listed.filter((p) => p.path !== '/' && p.path.split('/').length === 2)
+  const deep = listed.filter((p) => p.path.split('/').length > 2)
+  const line = (p: ResolvedPage) => `- [${stripBrand(site, p.title)}](${p.url}): ${truncate(p.description, 200)}`
+  const out = [`# ${site.name}`, '', `> ${truncate(site.llmsSummary ?? site.description, 400)}`, '']
+  if (site.entity.address) {
+    const a = site.entity.address
+    out.push(`${site.entity.name} is in ${a.addressLocality}, ${a.addressRegion}${site.entity.telephone ? `. Phone ${site.entity.telephone}` : ''}${site.entity.email ? `. Email ${site.entity.email}` : ''}.`, '')
   }
-  /*
-   * The wildcard rule is the one that governs. The named crawlers below it
-   * are redundant to a strict reading of the standard and are here anyway,
-   * because several of them read the block addressed to them and ignore the
-   * wildcard entirely once they find one.
-   */
-  const lines = ['User-agent: *', 'Allow: /', 'Disallow: /api/']
-  for (const bot of ['Googlebot', 'Googlebot-Image', 'Bingbot', 'DuckDuckBot']) {
-    lines.push('', `User-agent: ${bot}`, 'Allow: /')
+  out.push('## Pages', '')
+  if (home) out.push(line(home))
+  for (const p of top) out.push(line(p))
+  if (deep.length) {
+    out.push('', '## More', '')
+    for (const p of deep.slice(0, 200)) out.push(line(p))
   }
-  if (settings.domain) {
-    lines.push('', `Host: ${settings.domain}`, `Sitemap: ${settings.domain}/sitemap.xml`)
-  }
-  return `${lines.join('\n')}\n`
+  out.push('', '## Optional', '', `- [Sitemap](${site.siteUrl}/sitemap.xml)`, '')
+  return out.join('\n')
 }
 
-function escapeXml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;')
+/** The whole site as text, for sites with a journal or documentation. */
+export function buildLlmsFullTxt(site: SiteConfig, pages: ResolvedPage[]): string {
+  const listed = sitemapPages(site, pages).filter((p) => p.body)
+  return (
+    `# ${site.name}\n\n> ${truncate(site.llmsSummary ?? site.description, 400)}\n\n` +
+    listed.map((p) => `## ${p.title}\n${p.url}\n\n${stripHtml(p.body ?? '')}`).join('\n\n---\n\n') +
+    '\n'
+  )
 }

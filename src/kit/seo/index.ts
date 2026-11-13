@@ -1,18 +1,18 @@
+/* vendored from apotome-seo 1.0.1; edit the source, then re-run vendor.mjs */
 /**
- * The Apotome SEO kit.
+ * @apotome/seo, browser-safe entry.
  *
- * Vendor this folder into a client site at `src/kit/seo/`, add the postbuild
- * script, and the search settings the client edits in their portal become the
- * site's titles, descriptions, share cards, structured data, sitemap and
- * robots.txt on the next build.
- *
- * `stamp.ts` is deliberately not re-exported here: it imports `node:fs`, and
- * pulling it into the browser bundle through a barrel would break the build
- * of every site that imports anything else from this folder.
+ * Vendored into each site at src/seo/ (or src/kit/seo/). Import the Node half
+ * from './node' in build scripts only; never from app code.
  */
 
 export * from './types'
+export * from './text'
+export * from './schema'
 export * from './head'
+export * from './robots'
 export * from './sitemap'
-export * from './fetchSeo'
-export * from './useSeo'
+export * from './resolve'
+export * from './runtime'
+export * from './portal'
+export { VERSION } from './version'
