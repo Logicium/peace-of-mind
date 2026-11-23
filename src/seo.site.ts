@@ -16,6 +16,8 @@ import data from '@/data/data'
 
 export const site: SiteConfig = {
   siteUrl: 'https://www.peaceofmindbirthed.com',
+  // Google Search Console ownership tag (home page only). Managed by the studio.
+  verification: { google: '0zkpJrqg4kpiVCIB3NNgyPPCkQpJsfjKdqHv6qJuuZY' },
   name: 'Peace of Mind Birth Education',
   tagline: 'Childbirth education in Denver',
   description:
