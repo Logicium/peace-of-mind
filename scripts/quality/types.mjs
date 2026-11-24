@@ -1,4 +1,4 @@
-// vendored from @apotome/quality 0.1.0: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
 /**
  * Unused locals and parameters, from the project's own TypeScript (or vue-tsc) with the two
  * unused-code flags switched on for this run only. Slow, so it runs with --types, not in every

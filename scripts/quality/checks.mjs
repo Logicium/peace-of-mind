@@ -1,4 +1,4 @@
-// vendored from @apotome/quality 0.1.0: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
 /**
  * The source checks. Each returns { id, level, title, items } where an item is { path, line?, detail }.
  * Levels follow the Code Quality and Performance Standard: 'must' fails an enforcing build,

@@ -1,11 +1,12 @@
-// vendored from @apotome/quality 0.1.0: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
 /**
- * The repo as the checks see it: tracked files only (git ls-files), read once, each sorted into
+ * The repo as the checks see it: tracked files (git ls-files, or the folder when a hosted build has no
+ * .git), read once, each sorted into
  * own source, vendored source, or something else. Vendored code is measured by its own module,
  * never against the site, so the site is not blamed for lines it did not write.
  */
 import { execFileSync } from 'node:child_process'
-import { readFileSync, statSync } from 'node:fs'
+import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 
 export const SOURCE = /\.(vue|ts|tsx|js|mjs|cjs|scss|sass|css)$/
@@ -16,8 +17,7 @@ const TEST = /(\.(spec|test)\.[a-z]+$|(^|\/)(__tests__|e2e|cypress|test|tests)\/
 const EXEMPT_SIZE = /((^|\/)data\/|(^|\/)[^/]*(token|theme|palette|variables)[^/]*\.(s?css|ts)$|\.generated\.)/i
 
 export function loadRepo(root) {
-  const out = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 })
-  const tracked = out.split('\0').filter(Boolean)
+  const tracked = gitFiles(root) ?? walk(root)
   const cache = new Map()
   const read = (p) => {
     if (!cache.has(p)) {
@@ -32,6 +32,26 @@ export function loadRepo(root) {
   const isTest = (p) => TEST.test(p)
   const exemptSize = (p) => EXEMPT_SIZE.test(p)
   return { root, tracked, source, own, vendored, read, size, isTest, exemptSize, lines: (p) => read(p).split('\n').length }
+}
+
+function gitFiles(root) {
+  try {
+    return execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28, stdio: ['ignore', 'pipe', 'ignore'] }).split('\0').filter(Boolean)
+  } catch {
+    return null
+  }
+}
+
+// Hosted builds (Vercel) check out the files without .git, so the folder itself stands in for the index.
+const IGNORED = new Set(['.git', 'node_modules', 'dist', 'temp', '.vite', '.vercel', '.turbo', '.output', 'coverage', 'android', 'ios'])
+function walk(root, rel = '', out = []) {
+  for (const entry of readdirSync(path.join(root, rel), { withFileTypes: true })) {
+    if (IGNORED.has(entry.name)) continue
+    const p = rel ? `${rel}/${entry.name}` : entry.name
+    if (entry.isDirectory()) walk(root, p, out)
+    else out.push(p)
+  }
+  return out
 }
 
 /** The script part of a file: the whole file for .ts/.js, the <script> blocks of a .vue file. */
