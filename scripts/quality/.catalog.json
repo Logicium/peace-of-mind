@@ -1,0 +1,12 @@
+{
+  "module": "@apotome/quality",
+  "version": "0.1.0",
+  "files": {
+    "build.mjs": "f6e004f9580e22ac",
+    "check.mjs": "49c5be56188dfc5e",
+    "checks.mjs": "e9aaa4eeb8f24cd8",
+    "files.mjs": "c263bd10040bbefa",
+    "graph.mjs": "7e629665b651de95",
+    "types.mjs": "2f7b52db14e25b6d"
+  }
+}

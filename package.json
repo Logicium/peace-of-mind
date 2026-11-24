@@ -13,8 +13,9 @@
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "postbuild": "vite-node scripts/prerender.ts",
-    "lint": "eslint . --fix"
+    "postbuild": "vite-node scripts/prerender.ts && node scripts/quality/check.mjs",
+    "lint": "eslint . --fix",
+    "quality": "node scripts/quality/check.mjs"
   },
   "dependencies": {
     "pinia": "^3.0.1",
