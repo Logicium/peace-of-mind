@@ -183,7 +183,18 @@ export function initApotomeEditor(options: EditorOptions): void {
 
   configureEditor(options)
   const ready = hasTicket ? redeemHandoffTicket(options.apiUrl) : Promise.resolve()
-  void ready.then(() => import('./EditorBar.vue')).then((mod) => {
+  void ready
+    .then(() => {
+      /*
+       * Asked again, now that the ticket has been traded in. configureEditor
+       * above ran before the exchange finished, found no session, and the bar
+       * used to mount on that stale answer: the portal's one-click Edit button
+       * landed everyone on the sign-in form.
+       */
+      configureEditor(options)
+      return import('./EditorBar.vue')
+    })
+    .then((mod) => {
     const host = document.createElement('div')
     // Stable hook so a host site can hide the bar on pages where chrome is
     // unwelcome (a fullscreen deck, a kiosk view) without unmounting it.
