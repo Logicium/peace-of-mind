@@ -1,4 +1,4 @@
-// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.2: edit apotome-catalog/quality, then re-vendor
 /**
  * Unused locals and parameters, from the project's own TypeScript (or vue-tsc) with the two
  * unused-code flags switched on for this run only. Slow, so it runs with --types, not in every
@@ -25,7 +25,7 @@ export function unusedLocals(repo) {
     if (!binPath) continue
     const run = spawnSync(process.execPath, [binPath, '--noEmit', '-p', config, '--noUnusedLocals', '--noUnusedParameters'], { cwd: dir, encoding: 'utf8', timeout: 300000, maxBuffer: 1 << 26 })
     ran++
-    for (const line of `${run.stdout}\n${run.stderr}`.split('\n')) {
+    for (const line of `${run.stdout}\n${run.stderr}`.split(/\r?\n/)) {
       const m = line.match(/^(.+?)\((\d+),\d+\): (error TS\d+: .+)$/)
       if (!m || !CODES.test(line)) continue
       const file = path.posix.join(r, m[1].replace(/\\/g, '/')).replace(/^\.\//, '')

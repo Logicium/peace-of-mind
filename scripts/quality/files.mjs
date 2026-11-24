@@ -1,4 +1,4 @@
-// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.2: edit apotome-catalog/quality, then re-vendor
 /**
  * The repo as the checks see it: tracked files (git ls-files, or the folder when a hosted build has no
  * .git), read once, each sorted into

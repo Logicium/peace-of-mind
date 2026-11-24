@@ -1,4 +1,4 @@
-// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.2: edit apotome-catalog/quality, then re-vendor
 /**
  * The Apotome Labs quality check: every rule of the Code Quality and Performance Standard that a
  * script can check, run against the repo it is called in.

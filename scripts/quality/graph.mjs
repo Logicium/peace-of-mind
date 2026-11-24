@@ -1,4 +1,4 @@
-// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.2: edit apotome-catalog/quality, then re-vendor
 /**
  * Unused files: walk the import graph from each package's entry points and list the own source
  * files under src/ that nothing reaches. Imports, dynamic imports, import.meta.glob, new URL(),

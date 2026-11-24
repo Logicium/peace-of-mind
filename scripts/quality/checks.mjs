@@ -1,4 +1,4 @@
-// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.2: edit apotome-catalog/quality, then re-vendor
 /**
  * The source checks. Each returns { id, level, title, items } where an item is { path, line?, detail }.
  * Levels follow the Code Quality and Performance Standard: 'must' fails an enforcing build,
@@ -126,7 +126,7 @@ export function duplication(repo) {
 export function oneLine(repo) {
   const items = []
   for (const p of repo.own) {
-    if (repo.isTest(p)) continue
+    if (repo.isTest(p) || repo.exemptSize(p)) continue
     for (const block of scriptOf(p, repo.read(p))) {
       const lines = block.text.split('\n')
       for (let i = 0; i < lines.length; i++) {

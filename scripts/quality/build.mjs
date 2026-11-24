@@ -1,4 +1,4 @@
-// vendored from @apotome/quality 0.1.1: edit apotome-catalog/quality, then re-vendor
+// vendored from @apotome/quality 0.1.2: edit apotome-catalog/quality, then re-vendor
 /**
  * Checks on what the build produced (dist/) and on vendored copies. They read dist as it is on
  * disk, so after `npm run build` they describe that build; without a dist they are skipped.

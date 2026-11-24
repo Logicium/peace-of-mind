@@ -1,12 +1,12 @@
 {
   "module": "@apotome/quality",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "files": {
-    "build.mjs": "e4f17c4331a809c7",
-    "check.mjs": "b07e6b169836cbb7",
-    "checks.mjs": "6d042214d083fc6c",
-    "files.mjs": "610e1a7dce3aea06",
-    "graph.mjs": "3883bd21ca9cadeb",
-    "types.mjs": "92f95e5c1fea7bc8"
+    "build.mjs": "b6ab9a33dd0a6950",
+    "check.mjs": "8bc1af79d362b4d3",
+    "checks.mjs": "8862fed1c9e5f4a4",
+    "files.mjs": "dd42bf82087aa2a0",
+    "graph.mjs": "4a026eb63d36b341",
+    "types.mjs": "70c2c814c1b61fd5"
   }
 }
